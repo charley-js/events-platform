@@ -1,6 +1,4 @@
-import type { Config } from "tailwindcss";
-
-export default {
+module.exports = {
   content: ["../client/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
@@ -8,4 +6,4 @@ export default {
     },
   },
   plugins: [],
-} satisfies Config;
+};
