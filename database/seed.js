@@ -5,7 +5,7 @@ import categoryData from "./data/test-data/categories.js";
 import roleData from "./data/test-data/roles.js";
 import signupData from "./data/test-data/eventSignup.js";
 
-const seed = async () => {
+export const seed = async () => {
   let client;
   try {
     client = await connect();
@@ -18,9 +18,6 @@ const seed = async () => {
     console.log("Seeding succesful.");
   } catch (error) {
     console.log("Error during seeding.", error.message);
-  } finally {
-    if (client) await client.close();
-    console.log("Connection closed.");
   }
 };
 

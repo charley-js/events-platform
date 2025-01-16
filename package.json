@@ -8,12 +8,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --config ./config/jest.config.js"
+    "test": "jest --config ./config/jest.config.cjs"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.2.4",
     "@google-cloud/local-auth": "^3.0.1",
     "dotenv": "^16.4.7",
+    "events-platform": "file:",
     "formik": "^2.4.6",
     "googleapis": "^144.0.0",
     "mongodb": "^6.12.0",
