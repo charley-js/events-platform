@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   { signup_id: "001", user_id: "001", event_id: "001" },
   { signup_id: "002", user_id: "001", event_id: "002" },
   { signup_id: "003", user_id: "001", event_id: "003" },

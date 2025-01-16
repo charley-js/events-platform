@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {
     category_id: "001",
     category: "Charity",

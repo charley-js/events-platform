@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {
     role_id: "001",
     role: "staff",
