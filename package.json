@@ -13,6 +13,7 @@
   "dependencies": {
     "@auth0/auth0-react": "^2.2.4",
     "@google-cloud/local-auth": "^3.0.1",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "events-platform": "file:",
     "formik": "^2.4.6",
