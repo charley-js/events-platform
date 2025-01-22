@@ -22,13 +22,15 @@ export default async function handler(req, res) {
   const db = client.db();
   const events = db.collection("events");
   const { method } = req;
-  const { _id } = req.query;
+  const { _id, category } = req.query;
   const body = req.body;
 
   try {
     if (method === "GET") {
       if (_id) {
         await getEvent(events, _id, res);
+      } else if (category) {
+        await getEventsByCategory(events, category, res);
       } else {
         await getAllEvents(events, res);
       }
@@ -90,7 +92,7 @@ async function postEvent(events, body, res) {
         title: body.title,
         description: body.description,
         date: body.date,
-        category: body.category_id,
+        category: body.category,
         created: body.created_at,
       },
     });
@@ -135,5 +137,18 @@ async function deleteEvent(events, _id, res) {
   } catch (error) {
     console.error("Error deleting event", error.message);
     return res.status(500).json({ message: "Error deleting event" });
+  }
+}
+
+async function getEventsByCategory(events, category, res) {
+  try {
+    const result = await events.find({ category }).toArray();
+    if (result.length === 0) {
+      return res.status(404).json({ message: `No events found for ${category}` });
+    }
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching events by category", error.message);
+    res.status(500).json({ message: "Error fetching events by category" });
   }
 }
