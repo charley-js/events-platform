@@ -36,6 +36,8 @@ export default async function handler(req, res) {
       await postEvent(events, body, res);
     } else if (method === "PATCH") {
       await patchEvent(events, _id, body, res);
+    } else if (method === "DELETE") {
+      await deleteEvent(events, _id, res);
     } else {
       res.status(405).json({ message: "Invalid method" });
     }
@@ -120,5 +122,18 @@ async function patchEvent(events, _id, body, res) {
   } catch (error) {
     console.error("Error updating event.", error.message);
     return res.status(500).json({ message: "Error updating event" });
+  }
+}
+
+async function deleteEvent(events, _id, res) {
+  try {
+    if (!ObjectId.isValid(_id)) {
+      return res.status(400).json({ message: "Invalid ID format" });
+    }
+    const result = await events.deleteOne({ _id: new ObjectId(_id) });
+    return res.status(200).json({ message: "Event deleted succesfully" });
+  } catch (error) {
+    console.error("Error deleting event", error.message);
+    return res.status(500).json({ message: "Error deleting event" });
   }
 }
