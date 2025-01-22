@@ -9,6 +9,14 @@ const eventSchema = yup.object({
   category: yup.string().required("Event category is required"),
 });
 
+const eventUpdateSchema = yup.object({
+  title: yup.string(),
+  description: yup.string(),
+  date: yup.string(),
+  category: yup.string(),
+  attendees: yup.string(),
+});
+
 export default async function handler(req, res) {
   const client = await connect();
   const db = client.db();
@@ -26,6 +34,8 @@ export default async function handler(req, res) {
       }
     } else if (method === "POST") {
       await postEvent(events, body, res);
+    } else if (method === "PATCH") {
+      await patchEvent(events, _id, body, res);
     } else {
       res.status(405).json({ message: "Invalid method" });
     }
@@ -85,5 +95,30 @@ async function postEvent(events, body, res) {
   } catch (error) {
     console.error("Error posting event.", error.message);
     return res.status(500).json({ message: "Error posting event" });
+  }
+}
+
+async function patchEvent(events, _id, body, res) {
+  try {
+    if (!body || Object.keys(body).length === 0) {
+      return res.status(400).json({ message: "Invalid event format" });
+    }
+    if (!ObjectId.isValid(_id)) {
+      return res.status(400).json({ message: "Invalid ID format" });
+    }
+
+    await eventUpdateSchema.validate(body);
+    body.updated_at = Date.now();
+    const result = await events.updateOne({ _id: new ObjectId(_id) }, { $set: body });
+    return res.status(200).json({
+      message: "Event updated successfully",
+      event: {
+        id: _id,
+        ...body,
+      },
+    });
+  } catch (error) {
+    console.error("Error updating event.", error.message);
+    return res.status(500).json({ message: "Error updating event" });
   }
 }
