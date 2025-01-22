@@ -1,5 +1,13 @@
 import { connect } from "../../database/connection";
 import { ObjectId } from "mongodb";
+import * as yup from "yup";
+
+const eventSchema = yup.object({
+  title: yup.string().required("Event title is required"),
+  description: yup.string().required("Event description is required"),
+  date: yup.string().required("Event date is required"),
+  category: yup.string().required("Event category is required"),
+});
 
 export default async function handler(req, res) {
   const client = await connect();
@@ -7,6 +15,7 @@ export default async function handler(req, res) {
   const events = db.collection("events");
   const { method } = req;
   const { _id } = req.query;
+  const body = req.body;
 
   try {
     if (method === "GET") {
@@ -15,6 +24,8 @@ export default async function handler(req, res) {
       } else {
         await getAllEvents(events, res);
       }
+    } else if (method === "POST") {
+      await postEvent(events, body, res);
     } else {
       res.status(405).json({ message: "Invalid method" });
     }
@@ -49,5 +60,30 @@ async function getEvent(events, _id, res) {
   } catch (error) {
     console.error("Error fetching event: ", error.message);
     res.status(500).json({ message: "Error fetching event" });
+  }
+}
+
+async function postEvent(events, body, res) {
+  try {
+    if (!body || Object.keys(body).length === 0) {
+      return res.status(400).json({ message: "Invalid event format" });
+    }
+    await eventSchema.validate(body);
+    body.created_at = Date.now();
+    const result = await events.insertOne(body);
+    return res.status(201).json({
+      message: `Event created successfully`,
+      event: {
+        id: result.insertedId,
+        title: body.title,
+        description: body.description,
+        date: body.date,
+        category: body.category_id,
+        created: body.created_at,
+      },
+    });
+  } catch (error) {
+    console.error("Error posting event.", error.message);
+    return res.status(500).json({ message: "Error posting event" });
   }
 }
