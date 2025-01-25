@@ -81,44 +81,4 @@ const seedCategories = async (db, categoryData) => {
   }
 };
 
-const seedRoles = async (db, roleData) => {
-  try {
-    const collections = await db.listCollections({ name: "roles" }).toArray();
-    if (collections.length > 0) {
-      await db.collection("roles").drop();
-      console.log("Existing 'roles' collection dropped.");
-    }
-
-    await db.createCollection("roles");
-    console.log("Collection 'roles' created.");
-    const roles = db.collection("roles");
-    await roles.insertMany(roleData);
-    const roleDocs = await roles.find().toArray();
-    console.log("Contents of the 'roles' collection:", roleDocs);
-    console.log("'role' data added succesfully.");
-  } catch (error) {
-    console.log("Error whilst seeding 'roles'.", error.message);
-  }
-};
-
-const seedEventSignup = async (db, signupData) => {
-  try {
-    const collections = await db.listCollections({ name: "event-signups" }).toArray();
-    if (collections.length > 0) {
-      await db.collection("event-signups").drop();
-      console.log("Existing 'event-signups' collection dropped.");
-    }
-
-    await db.createCollection("event-signups");
-    console.log("Collection 'event-signups' created.");
-    const signups = db.collection("event-signups");
-    await signups.insertMany(signupData);
-    const signupDocs = await signups.find().toArray();
-    console.log("Contents of the 'event-signups' collection:", signupDocs);
-    console.log("'signup' data added succesfully.");
-  } catch (error) {
-    console.log("Error whilst seeding 'event-signups'.", error.message);
-  }
-};
-
 seed();

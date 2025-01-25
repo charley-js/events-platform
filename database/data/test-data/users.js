@@ -8,6 +8,7 @@ export default [
     password: "password",
     events: [new ObjectId("60f8c0f8b8a5ca401f2fbb4e")],
     role_id: "001",
+    isMod: true,
   },
   {
     _id: new ObjectId("60f8c0f8b8a5ca401f2fbb2c"),
@@ -15,7 +16,7 @@ export default [
     email: "simonsays@gmail.com",
     password: "1234",
     events: [new ObjectId("60f8c0f8b8a5ca401f2fbb5f"), new ObjectId("60f8c0f8b8a5ca401f2fbb7b")],
-    role_id: "002",
+    isMod: false,
   },
   {
     _id: new ObjectId("60f8c0f8b8a5ca401f2fbb3d"),
@@ -23,6 +24,6 @@ export default [
     email: "benson1@gmail.com",
     password: "abc",
     events: [new ObjectId("60f8c0f8b8a5ca401f2fbb7b")],
-    role_id: "003",
+    isMod: false,
   },
 ];
