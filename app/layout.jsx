@@ -1,9 +1,8 @@
-import { Metadata } from "next";
 import React from "react";
 
-export const metadata = {
-  title: "",
-  description: "",
+export const Metadata = {
+  title: "Events Platform",
+  description: "Check out the latest events near you.",
 };
 
 export default function RootLayout({ children }) {
