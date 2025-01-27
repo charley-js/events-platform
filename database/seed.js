@@ -2,8 +2,6 @@ import { connect } from "./connection.js";
 import userData from "./data/test-data/users.js";
 import eventData from "./data/test-data/events.js";
 import categoryData from "./data/test-data/categories.js";
-import roleData from "./data/test-data/roles.js";
-import signupData from "./data/test-data/eventSignup.js";
 
 export const seed = async () => {
   let client;
@@ -13,8 +11,6 @@ export const seed = async () => {
     await seedUsers(db, userData);
     await seedEvents(db, eventData);
     await seedCategories(db, categoryData);
-    await seedRoles(db, roleData);
-    await seedEventSignup(db, signupData);
     console.log("Seeding succesful.");
   } catch (error) {
     console.log("Error during seeding.", error.message);
