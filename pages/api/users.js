@@ -14,7 +14,7 @@ const userSchema = yup.object({
     .matches(/[0-9]/, "Password must contain at least one number")
     .matches(/[@$!%*?&]/, "Password must contain at least one special character")
     .required("Password is required"),
-  role_id: yup.string().required("Role ID is required"),
+  isMod: yup.boolean().required("isMod is required"),
 });
 
 export default async function handler(req, res) {
@@ -82,7 +82,7 @@ async function postUser(users, body, res) {
     const result = await users.insertOne(body);
     return res.status(201).json({
       message: `User created successfully`,
-      user: { id: result.insertedId, username: body.username, email: body.email, role_id: body.role_id },
+      user: { id: result.insertedId, username: body.username, email: body.email, isMod: body.isMod },
     });
   } catch (error) {
     console.error("Error posting user.", error.message);

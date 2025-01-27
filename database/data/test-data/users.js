@@ -7,7 +7,6 @@ export default [
     email: "johndoe@gmail.com",
     password: "password",
     events: [new ObjectId("60f8c0f8b8a5ca401f2fbb4e")],
-    role_id: "001",
     isMod: true,
   },
   {
