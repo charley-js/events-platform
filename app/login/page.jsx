@@ -17,7 +17,7 @@ export default function LoginPage() {
         return res.json();
       })
       .then((data) => {
-        if (data.message === "Login succesful") {
+        if (data.message === "Authentication successful") {
           alert("Logged in succesfully");
         } else {
           alert("Error during login");
