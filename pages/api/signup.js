@@ -1,6 +1,13 @@
 import { connect } from "../../database/connection";
+import { google } from "googleapis";
 import * as yup from "yup";
 import bcrypt from "bcrypt";
+
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  process.env.GOOGLE_REDIRECT_URI
+);
 
 const userSchema = yup.object({
   username: yup.string().required("Username is required"),
@@ -13,7 +20,7 @@ const userSchema = yup.object({
     .matches(/[0-9]/, "Password must contain at least one number")
     .matches(/[@$!%*?&]/, "Password must contain at least one special character")
     .required("Password is required"),
-  isMod: yup.boolean().required("isMod is required"),
+  googleToken: yup.string().required("Google authentication required"),
 });
 
 export default async function handler(req, res) {
@@ -42,7 +49,17 @@ async function signUp(users, body, res) {
     if (!body || Object.keys(body).length === 0) {
       return res.status(400).json({ message: "Invalid user format" });
     }
+    const user = await users.findOne({ username: body.username });
+    if (user) {
+      return res.status(400).json({ message: "User already exists" });
+    }
     await userSchema.validate(body);
+    const { tokens } = await oauth2Client.getToken(body.googleToken);
+    oauth2Client.setCredentials(tokens);
+    const oauth2 = google.oauth2({ version: "v2", auth: oauth2Client });
+    const { data } = await oauth2.userinfo.get();
+    body.googleId = data.id;
+    body.googleTokens = tokens;
     const hashedPassword = await bcrypt.hash(body.password, 10);
     body.password = hashedPassword;
     const result = await users.insertOne(body);
