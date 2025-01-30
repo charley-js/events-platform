@@ -37,7 +37,7 @@ async function eventSignup(userId, eventId, users, events, res) {
       return res.status(404).json({ message: "Event not found" });
     }
 
-    if (user.events.includes(new ObjectId(eventId))) {
+    if (user.events.includes(eventId)) {
       return res.status(400).json({ message: "Already signed up for event" });
     }
 

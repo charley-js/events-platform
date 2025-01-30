@@ -23,7 +23,7 @@ export default function SignupPage() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    const user = { username, email, password, isMod: false };
+    const user = { username, email, password, events: [], isMod: false };
     return userSchema
       .validate(user, { abortEarly: false })
       .then(() => {
