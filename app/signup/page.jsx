@@ -28,7 +28,7 @@ export default function SignupPage() {
       .validate(user, { abortEarly: false })
       .then(() => {
         setErrors({ username: "", email: "", password: "" });
-        return fetch("/api/users", {
+        return fetch("/api/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(user),
