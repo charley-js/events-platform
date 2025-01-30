@@ -4,9 +4,9 @@ import * as yup from "yup";
 import bcrypt from "bcrypt";
 
 const oauth2Client = new google.auth.OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_REDIRECT_URI
+  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
+  process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI
 );
 
 const userSchema = yup.object({
@@ -54,12 +54,13 @@ async function signUp(users, body, res) {
       return res.status(400).json({ message: "User already exists" });
     }
     await userSchema.validate(body);
-    const { tokens } = await oauth2Client.getToken(body.googleToken);
-    oauth2Client.setCredentials(tokens);
-    const oauth2 = google.oauth2({ version: "v2", auth: oauth2Client });
-    const { data } = await oauth2.userinfo.get();
-    body.googleId = data.id;
-    body.googleTokens = tokens;
+    const token = await oauth2Client.verifyIdToken({
+      idToken: body.googleToken,
+      audience: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+    });
+    const payload = token.getPayload();
+    body.googleId = payload.sub;
+    body.googleTokens = body.googleToken;
     const hashedPassword = await bcrypt.hash(body.password, 10);
     body.password = hashedPassword;
     const result = await users.insertOne(body);
