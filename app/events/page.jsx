@@ -28,7 +28,7 @@ export default function EventsPage() {
       <h1>All Events</h1>
       {isMod && <button onClick={handleCreateEvent}>Create Event</button>}
       {events.map((event) => (
-        <EventCard key={event._id} event={event} />
+        <EventCard key={event._id} event={event} isMod={isMod} />
       ))}
     </div>
   );

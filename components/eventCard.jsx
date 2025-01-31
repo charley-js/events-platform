@@ -1,6 +1,6 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 
-export default function EventCard({ event }) {
+export default function EventCard({ event, isMod }) {
   const [attendees, setAttendees] = useState(event.attendees);
   const userId = localStorage.getItem("userId");
   const accessToken = localStorage.getItem("accessToken");
@@ -34,6 +34,10 @@ export default function EventCard({ event }) {
       });
   }
 
+  function handleEditEvent() {}
+
+  function handleDeleteEvent() {}
+
   return (
     <div>
       <h2>{event.title}</h2>
@@ -43,6 +47,12 @@ export default function EventCard({ event }) {
       <p>{attendees.length} Attending</p>
       <p>Created on: {new Date(event.created_at).toLocaleDateString()}</p>
       <button onClick={handleSignup}>Sign up</button>
+      {isMod && (
+        <div>
+          <button onClick={handleEditEvent}>Edit</button>
+          <button onClick={handleDeleteEvent}>Delete</button>
+        </div>
+      )}
     </div>
   );
 }
