@@ -36,7 +36,22 @@ export default function EventCard({ event, isMod }) {
 
   function handleEditEvent() {}
 
-  function handleDeleteEvent() {}
+  function handleDeleteEvent() {
+    fetch(`/api/events?_id=${eventId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        if (data.message === "Event deleted succesfully") {
+          alert("Event deleted");
+        } else {
+          alert("Failed to delete event");
+        }
+      });
+  }
 
   return (
     <div>
