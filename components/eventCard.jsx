@@ -3,11 +3,12 @@ import { React, useState } from "react";
 export default function EventCard({ event }) {
   const [attendees, setAttendees] = useState(event.attendees);
   const userId = localStorage.getItem("userId");
+  const googleToken = localStorage.getItem("googleToken");
   const eventId = event._id;
 
   function handleSignup() {
-    if (!userId) {
-      alert("Log in required");
+    if (!userId || !googleToken) {
+      alert("Log in and Google authentication required");
       return;
     }
     if (attendees.includes(userId)) {
@@ -17,26 +18,30 @@ export default function EventCard({ event }) {
     fetch(`/api/event-signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, eventId }),
-    }).then((res) => {
-      if (res.ok) {
-        setAttendees([...attendees, userId]);
-        alert("Signed up for event");
-      } else {
-        alert("Failed to sign up for event");
-      }
-    });
-  }
+      body: JSON.stringify({ userId, eventId, googleToken }),
+    })
+      .then((res) => {
+        res.json();
+      })
+      .then((data) => {
+        if (data.message === "Event added to Google Calendar") {
+          setAttendees([...attendees, userId]);
+          alert("Signed up and added to Google Calendar");
+        } else {
+          alert("Failed to sign up for event");
+        }
+      });
 
-  return (
-    <div>
-      <h2>{event.title}</h2>
-      <p>{event.description}</p>
-      <p>Date: {new Date(event.date).toLocaleDateString()}</p>
-      <p>Category: {event.category}</p>
-      <p>{attendees.length} Attending</p>
-      <p>Created on: {new Date(event.created_at).toLocaleDateString()}</p>
-      <button onClick={handleSignup}>Sign up</button>
-    </div>
-  );
+    return (
+      <div>
+        <h2>{event.title}</h2>
+        <p>{event.description}</p>
+        <p>Date: {new Date(event.date).toLocaleDateString()}</p>
+        <p>Category: {event.category}</p>
+        <p>{attendees.length} Attending</p>
+        <p>Created on: {new Date(event.created_at).toLocaleDateString()}</p>
+        <button onClick={handleSignup}>Sign up</button>
+      </div>
+    );
+  }
 }

@@ -34,7 +34,9 @@ export default async function handler(req, res) {
     if (!payload || user.googleId !== payload.sub) {
       return res.status(401).json({ message: "Google authentication failed" });
     }
-    return res.status(200).json({ message: "Authentication successful", userId: user._id.toString() });
+    return res
+      .status(200)
+      .json({ message: "Authentication successful", userId: user._id.toString(), googleToken: googleToken.toString() });
   } catch (error) {
     console.error("Error during authentication:", error);
     res.status(500).json({ message: "Internal server error" });

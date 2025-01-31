@@ -30,6 +30,7 @@ export default function LoginPage() {
       .then((data) => {
         if (data.message === "Authentication successful") {
           localStorage.setItem("userId", data.userId);
+          localStorage.setItem("googleToken", data.googleToken);
           alert("Logged in succesfully");
         } else {
           alert("Error during login");
