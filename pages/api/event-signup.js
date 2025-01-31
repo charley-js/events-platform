@@ -1,5 +1,6 @@
 import { connect } from "../../database/connection";
 import { ObjectId } from "mongodb";
+import { google } from "googleapis";
 
 export default async function handler(req, res) {
   const client = await connect();
@@ -7,11 +8,11 @@ export default async function handler(req, res) {
   const users = db.collection("users");
   const events = db.collection("events");
   const { method } = req;
-  const { userId, eventId } = req.body;
+  const { userId, eventId, accessToken } = req.body;
 
   try {
     if (method === "POST") {
-      await eventSignup(userId, eventId, users, events, res);
+      await eventSignup(userId, eventId, accessToken, users, events, res);
     } else {
       res.status(405).json({ message: "Invalid method" });
     }
@@ -23,11 +24,12 @@ export default async function handler(req, res) {
   }
 }
 
-async function eventSignup(userId, eventId, users, events, res) {
+async function eventSignup(userId, eventId, accessToken, users, events, res) {
   try {
-    if (!ObjectId.isValid(userId) || !ObjectId.isValid(eventId)) {
-      return res.status(400).json({ message: "Invalid ID format" });
+    if (!ObjectId.isValid(userId) || !ObjectId.isValid(eventId) || !accessToken) {
+      return res.status(400).json({ message: "Invalid credentials" });
     }
+
     const user = await users.findOne({ _id: new ObjectId(userId) });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -43,8 +45,37 @@ async function eventSignup(userId, eventId, users, events, res) {
 
     await users.updateOne({ _id: new ObjectId(userId) }, { $push: { events: new ObjectId(eventId) } });
     await events.updateOne({ _id: new ObjectId(eventId) }, { $push: { attendees: new ObjectId(userId) } });
+    const oauth2Client = new google.auth.OAuth2(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET);
+    oauth2Client.setCredentials({ access_token: accessToken });
 
-    res.status(200).json({ message: "Successfully signed up for event" });
+    try {
+      const tokenInfo = await oauth2Client.getTokenInfo(accessToken);
+      console.log("Google Token Info:", tokenInfo);
+
+      // if (!tokenInfo.scopes.includes("https://www.googleapis.com/auth/calendar.events")) {
+      //   return res.status(403).json({ message: "Missing Google Calendar permissions" });
+      // }
+    } catch (error) {
+      console.error("Invalid Google Token:", error.message);
+      return res.status(400).json({ message: "Invalid Google Token" });
+    }
+
+    const calendar = google.calendar({ version: "v3", auth: oauth2Client });
+
+    const googleEvent = {
+      summary: event.title,
+      description: event.description,
+      start: { dateTime: new Date(event.date).toISOString(), timeZone: "UTC" },
+      end: { dateTime: new Date(event.date).toISOString(), timeZone: "UTC" },
+      attendees: [{ email: user.email }],
+    };
+
+    const response = await calendar.events.insert({
+      calendarId: "primary",
+      resource: googleEvent,
+    });
+
+    return res.status(200).json({ message: "Event added to Google Calendar" });
   } catch (error) {
     console.error("Error signing up for event", error.message);
     res.status(500).json({ message: "Error signing up for event" });

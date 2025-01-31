@@ -1,4 +1,5 @@
 import React from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export const Metadata = {
   title: "Events Platform",
@@ -8,7 +9,9 @@ export const Metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+        <body>{children}</body>
+      </GoogleOAuthProvider>
     </html>
   );
 }

@@ -1,24 +1,27 @@
 "use client";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import { useState } from "react";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [googleToken, setGoogleToken] = useState("");
+  const [accessToken, setAccessToken] = useState("");
 
-  function handleGoogleSuccess(res) {
-    setGoogleToken(res.credential);
-  }
-
-  function handleGoogleFailure(error) {
-    console.error(error);
-    alert("Google authentication failed.");
-  }
+  const googleLogin = useGoogleLogin({
+    onSuccess: (res) => {
+      console.log("OAuth Access Token:", res.access_token);
+      setAccessToken(res.access_token);
+    },
+    onError: (error) => {
+      console.error("Google login failed:", error);
+      alert("Google login failed");
+    },
+    scope: "https://www.googleapis.com/auth/calendar",
+  });
 
   function handleSubmit(event) {
     event.preventDefault();
-    const details = { username, password, googleToken };
+    const details = { username, password, accessToken };
     fetch("/api/auth", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -30,7 +33,7 @@ export default function LoginPage() {
       .then((data) => {
         if (data.message === "Authentication successful") {
           localStorage.setItem("userId", data.userId);
-          localStorage.setItem("googleToken", data.googleToken);
+          localStorage.setItem("accessToken", data.accessToken);
           alert("Logged in succesfully");
         } else {
           alert("Error during login");
@@ -64,8 +67,10 @@ export default function LoginPage() {
             onChange={(event) => setPassword(event.target.value)}
             required
           />
-          <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleFailure} />
-          <button type="submit" disabled={!googleToken}>
+          <button type="button" onClick={() => googleLogin()}>
+            Sign in with Google
+          </button>
+          <button type="submit" disabled={!accessToken}>
             Log In
           </button>
         </form>
