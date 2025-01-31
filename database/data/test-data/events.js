@@ -8,7 +8,7 @@ export default [
       "20th anniversary of The Great Park Run, all in the name of charity. Join us , get fit, do something big.",
     date: " 2025-02-13 10:00:00",
     category: "Charity",
-    attendees: [new ObjectId("60f8c0f8b8a5ca401f2fbb1b")],
+    attendees: [],
     created_at: "2025-01-14 21:56:00",
   },
   {
@@ -18,7 +18,7 @@ export default [
       "Relive the night life on the 90's , a one time event organised by us for you, featuring your favourite oldskool anthems and DJ's.",
     date: "2025-06-30 20:00:00",
     category: "Nightlife",
-    attendees: [new ObjectId("60f8c0f8b8a5ca401f2fbb2c")],
+    attendees: [],
     created_at: "2025-01-14 22:07:00",
   },
   {
@@ -37,7 +37,7 @@ export default [
     description: "The famous fairy tale of Cinderella, retold as a theatre production here at our local pantomime!",
     date: "2025-05-05 16:00:00",
     category: "Theatre",
-    attendees: [new ObjectId("60f8c0f8b8a5ca401f2fbb3d"), new ObjectId("60f8c0f8b8a5ca401f2fbb2c")],
+    attendees: [],
     created_at: "2025-01-14 22:07:00",
   },
 ];

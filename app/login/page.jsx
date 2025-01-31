@@ -34,6 +34,7 @@ export default function LoginPage() {
         if (data.message === "Authentication successful") {
           localStorage.setItem("userId", data.userId);
           localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("isMod", data.isMod);
           alert("Logged in succesfully");
         } else {
           alert("Error during login");
