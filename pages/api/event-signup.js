@@ -51,10 +51,6 @@ async function eventSignup(userId, eventId, accessToken, users, events, res) {
     try {
       const tokenInfo = await oauth2Client.getTokenInfo(accessToken);
       console.log("Google Token Info:", tokenInfo);
-
-      // if (!tokenInfo.scopes.includes("https://www.googleapis.com/auth/calendar.events")) {
-      //   return res.status(403).json({ message: "Missing Google Calendar permissions" });
-      // }
     } catch (error) {
       console.error("Invalid Google Token:", error.message);
       return res.status(400).json({ message: "Invalid Google Token" });

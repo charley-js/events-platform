@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 export default [
   {
-    _id: "679d1d562f9f097591e2c343",
+    _id: new ObjectId("679d1d562f9f097591e2c343"),
     username: "staff",
     email: "staff@gmail.com",
     password: "$2b$10$i7QCDAtNgnj277kkZo9/i.4KVuONJs6sCAiOsUtkg2C8RyFyCfKN.",
@@ -15,7 +15,7 @@ export default [
       "eyJhbGciOiJSUzI1NiIsImtpZCI6ImZhMDcyZjc1Nzg0NjQyNjE1MDg3YzcxODJjMTAxMzQxZTE4ZjdhM2EiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI3NDI4Mjc2NjQyMDAtOTN1c3FidTl1dXJ1dDVhaHFrMW1qMHY5dGZtZWZwbHQuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI3NDI4Mjc2NjQyMDAtOTN1c3FidTl1dXJ1dDVhaHFrMW1qMHY5dGZtZWZwbHQuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTc3NTcwNTE1MzUxMzU4NDk1NzciLCJlbWFpbCI6ImNoYXJsZXljcm93c29uMTk5N0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmJmIjoxNzM4MzQ5NjA1LCJuYW1lIjoiQ2hhcmxleSBDcm93c29uIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tzRElJdzhsYThnZmpneXdudldyUDJEUVpNRG5EeWk2a2swMmlyblpIS2dsVFV6QT1zOTYtYyIsImdpdmVuX25hbWUiOiJDaGFybGV5IiwiZmFtaWx5X25hbWUiOiJDcm93c29uIiwiaWF0IjoxNzM4MzQ5OTA1LCJleHAiOjE3MzgzNTM1MDUsImp0aSI6IjY5NDI4ZmIyNzE3NTlhNDc4NWUwN2ZjZTc0MTFhMzcyN2RlZDE5ODgifQ.O98EJmi7TZHLtDVKQO15Ps4vSuxUus2bzsT_a7l5dukGCb57jhKnFZX3y497hu7dk8jkav2CdhyRrK22ywxTL572xcTO4efhkIBTPqdiLwzs1hjFLdo5mFMm9y_CbndantaUaoiJojhZ9GFF0BcwQeEACn0TzZH2B84YIPOIei4FqRHUwarvcFls_3Au0UFOg_r3cziyi6UyNSLLfMVYCg6cdDH2bLP18_3om58JY6NrAfVMXT3iAzWPykmGEG84T1AwTZ_zP0QFWB4hp2i2I-Bp3ObApJ39x-NI4WevUjO456sckTOJG7hrpZHh9pwCzCw9WVZ-v3yr6DswA9YtPg",
   },
   {
-    _id: "679d1de02f9f097591e2c344",
+    _id: new ObjectId("679d1de02f9f097591e2c344"),
     username: "test-user",
     email: "user@gmail.com",
     password: "$2b$10$VJYisB0SBG2IUF3zNgCyiORrYnZtEKWvn7QKK/dTj12FMBeB5JnNO",

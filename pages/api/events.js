@@ -84,6 +84,7 @@ async function postEvent(events, body, res) {
     }
     await eventSchema.validate(body);
     body.created_at = Date.now();
+    body.attendees = [];
     const result = await events.insertOne(body);
     return res.status(201).json({
       message: `Event created successfully`,
