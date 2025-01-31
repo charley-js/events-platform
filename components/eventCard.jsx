@@ -1,10 +1,12 @@
-import { React, useEffect, useState } from "react";
+import { React, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function EventCard({ event, isMod }) {
   const [attendees, setAttendees] = useState(event.attendees);
   const userId = localStorage.getItem("userId");
   const accessToken = localStorage.getItem("accessToken");
   const eventId = event._id;
+  const router = useRouter();
 
   function handleSignup() {
     if (!userId || !accessToken) {
@@ -34,7 +36,9 @@ export default function EventCard({ event, isMod }) {
       });
   }
 
-  function handleEditEvent() {}
+  function handleEditEvent() {
+    router.push(`/edit-event/${eventId}`);
+  }
 
   function handleDeleteEvent() {
     fetch(`/api/events?_id=${eventId}`, {
