@@ -1,6 +1,8 @@
 "use client";
 import { React, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Card, CardBody, Heading, Box, Stack, Text, HStack } from "@chakra-ui/react";
+import { Avatar } from "../components/ui/avatar";
 
 export default function Dashboard() {
   const [user, setUser] = useState({});
@@ -32,26 +34,45 @@ export default function Dashboard() {
 
   if (loading) return <p>Loading...</p>;
   return (
-    <div>
-      <h1>Welcome, {user.username}!</h1>
-      <p>Email: {user.email}</p>
+    <Box p={6} maxW="800px" mx="auto">
+      <Card.Root mb={6} p={4} borderRadius="lg" boxShadow="md">
+        <CardBody>
+          <HStack mb={4} gap={3}>
+            <Avatar name={user.username} src="" />
+            <Stack>
+              <Heading size="lg">Welcome, {user.username}</Heading>
+              <Text color="gray.500">{user.email}</Text>
+            </Stack>
+          </HStack>
+        </CardBody>
+      </Card.Root>
 
-      <h2>Your Events</h2>
-      <ul>
-        {events.length > 0 ? (
-          events.map((event) => (
-            <li key={event._id}>
-              <h2>{event.title}</h2>
-              <strong>{event.category}</strong>
-              <p>{event.description}</p>
-              <p>{new Date(event.date).toLocaleDateString()}</p>
-              <p>{event.attendees.length} Attending</p>
-            </li>
-          ))
-        ) : (
-          <p>Empty.</p>
-        )}
-      </ul>
-    </div>
+      <Heading size="md" mb={4}>
+        Your Events
+      </Heading>
+      {events.length > 0 ? (
+        events.map((event) => (
+          <Card.Root key={event._id} mb={4} p={4} borderRadius="lg" boxShadow="sm">
+            <CardBody>
+              <Heading size="md" mb={2}>
+                {event.title}
+              </Heading>
+              <Text fontSize="sm" color="gray.500">
+                {event.category}
+              </Text>
+              <Text mt={2}>{event.description}</Text>
+              <Text fontSize="sm" mt={2}>
+                Date: {new Date(event.date).toLocaleDateString()}
+              </Text>
+              <Text fontSize="sm" mt={1}>
+                {event.attendees.length} Attending
+              </Text>
+            </CardBody>
+          </Card.Root>
+        ))
+      ) : (
+        <Text>No events available.</Text>
+      )}
+    </Box>
   );
 }
