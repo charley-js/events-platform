@@ -1,7 +1,7 @@
 import { connect } from "../../database/connection";
 import { google } from "googleapis";
 import * as yup from "yup";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,

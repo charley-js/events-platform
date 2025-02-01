@@ -21,7 +21,9 @@ export default function Dashboard() {
     fetch(`/api/events?userId=${userId}`)
       .then((res) => res.json())
       .then((data) => setEvents(data))
-      .catch(console.error);
+      .catch((err) => {
+        setEvents();
+      });
   }, []);
 
   return (

@@ -1,7 +1,9 @@
 "use client";
-import { React, useState } from "react";
+import React, { useState } from "react";
 import * as yup from "yup";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { Heading, Text, Stack, Input, Button, Field, FieldRequiredIndicator, Center, Box } from "@chakra-ui/react";
+import { PasswordInput, PasswordStrengthMeter } from "../../components/ui/password-input";
 import { useRouter } from "next/navigation";
 
 const userSchema = yup.object({
@@ -75,49 +77,70 @@ export default function SignupPage() {
 
   return (
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
-      <div>
-        <h2>Welcome!</h2>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="username">Username: </label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            placeholder="Username..."
-            onChange={(event) => setUsername(event.target.value)}
-            required
-          />
-          {errors.username && <p>{errors.username}</p>}
-          <label htmlFor="email">Email : </label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            placeholder="Email Address..."
-            onChange={(event) => setEmail(event.target.value)}
-            required
-          />
-          {errors.email && <p>{errors.email}</p>}
-          <label htmlFor="password">Password: </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            placeholder="Password..."
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
-          {errors.password && <p>{errors.password}</p>}
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleFailure}
-            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-          />
-          <button type="submit" disabled={!googleToken}>
-            Sign Up
-          </button>
-        </form>
-      </div>
+      <Center height={"100vh"}>
+        <Stack width={"50%"} align={"center"}>
+          <Heading size={"xl"}>Welcome!</Heading>
+          <Text mb={4}>Please sign up below</Text>
+          <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
+            <form onSubmit={handleSubmit}>
+              <Field.Root required mb={4}>
+                <Field.Label>
+                  Enter Username:
+                  <FieldRequiredIndicator />
+                </Field.Label>
+                <Input value={username} onChange={(event) => setUsername(event.target.value)} />
+              </Field.Root>
+              {errors.username && <p>{errors.username}</p>}
+              <Field.Root required mb={4}>
+                <Field.Label>
+                  Enter Email:
+                  <FieldRequiredIndicator />
+                </Field.Label>
+                <Input value={email} onChange={(event) => setEmail(event.target.value)} />
+                <Field.HelperText>We will never give out your email address.</Field.HelperText>
+              </Field.Root>
+              {errors.email && <p>{errors.email}</p>}
+              <Field.Root required mb={4}>
+                <Field.Label>
+                  Enter Password:
+                  <FieldRequiredIndicator />
+                </Field.Label>
+                <PasswordInput value={password} onChange={(event) => setPassword(event.target.value)} />
+                <PasswordStrengthMeter value={password} />
+                <Field.HelperText>
+                  Requires at least one uppercase letter, one lowercase letter, one number and one special character.
+                  Must be at least 8 characters long.
+                </Field.HelperText>
+              </Field.Root>
+              {errors.password && <p>{errors.password}</p>}
+              <Box display="flex" justifyContent="center" mb={4}>
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleFailure}
+                  clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+                  theme="outline"
+                  size="medium"
+                  style={{ transform: "scale(0.85)" }}
+                />
+              </Box>
+              <Center mb={4}>
+                <Button type="submit" disabled={!googleToken}>
+                  Sign Up
+                </Button>
+              </Center>
+              <Center>
+                <Text align={"center"}>
+                  Already have an account?{" "}
+                  <a color={"blue"} href="/login">
+                    Login
+                  </a>
+                  .
+                </Text>
+              </Center>
+            </form>
+          </Box>
+        </Stack>
+      </Center>
     </GoogleOAuthProvider>
   );
 }
