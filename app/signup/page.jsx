@@ -2,6 +2,7 @@
 import { React, useState } from "react";
 import * as yup from "yup";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { useRouter } from "next/navigation";
 
 const userSchema = yup.object({
   username: yup.string().required("Username is required"),
@@ -23,6 +24,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [googleToken, setGoogleToken] = useState("");
   const [errors, setErrors] = useState({ username: "", email: "", password: "" });
+  const router = useRouter();
 
   function handleGoogleSuccess(res) {
     setGoogleToken(res.credential);
@@ -53,6 +55,7 @@ export default function SignupPage() {
       .then((data) => {
         if (data.message === "User created successfully") {
           alert("Sign up successful");
+          router.push("/login");
         } else {
           alert("Error during Sign up");
         }
