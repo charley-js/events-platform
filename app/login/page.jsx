@@ -1,15 +1,15 @@
 "use client";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [accessToken, setAccessToken] = useState("");
+  const router = useRouter();
 
   const googleLogin = useGoogleLogin({
     onSuccess: (res) => {
-      console.log("OAuth Access Token:", res.access_token);
       setAccessToken(res.access_token);
     },
     onError: (error) => {
@@ -36,6 +36,7 @@ export default function LoginPage() {
           localStorage.setItem("accessToken", data.accessToken);
           localStorage.setItem("isMod", data.isMod);
           alert("Logged in succesfully");
+          router.push("/");
         } else {
           alert("Error during login");
         }
@@ -74,6 +75,9 @@ export default function LoginPage() {
           <button type="submit" disabled={!accessToken}>
             Log In
           </button>
+          <p>
+            Don't have an account yet? <a href="/signup">Sign up.</a>
+          </p>
         </form>
       </div>
     </GoogleOAuthProvider>

@@ -31,15 +31,19 @@ export default function Dashboard() {
 
       <h2>Your Events</h2>
       <ul>
-        {events.map((event) => (
-          <li key={event._id}>
-            <h2>{event.title}</h2>
-            <strong>{event.category}</strong>
-            <p>{event.description}</p>
-            <p>{new Date(event.date).toLocaleDateString()}</p>
-            <p>{event.attendees.length} Attending</p>
-          </li>
-        ))}
+        {events.length > 0 ? (
+          events.map((event) => (
+            <li key={event._id}>
+              <h2>{event.title}</h2>
+              <strong>{event.category}</strong>
+              <p>{event.description}</p>
+              <p>{new Date(event.date).toLocaleDateString()}</p>
+              <p>{event.attendees.length} Attending</p>
+            </li>
+          ))
+        ) : (
+          <p>Empty.</p>
+        )}
       </ul>
     </div>
   );
