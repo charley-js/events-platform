@@ -1,6 +1,6 @@
 import React from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { Provider } from "@ui/provider";
+import { Provider } from "../components/ui/provider";
 
 export const Metadata = {
   title: "Events Platform",

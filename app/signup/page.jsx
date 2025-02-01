@@ -2,7 +2,18 @@
 import React, { useState } from "react";
 import * as yup from "yup";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { Heading, Text, Stack, Input, Button, Field, FieldRequiredIndicator, Center, Box } from "@chakra-ui/react";
+import {
+  Heading,
+  Text,
+  Stack,
+  Input,
+  Button,
+  Field,
+  FieldRequiredIndicator,
+  Center,
+  Box,
+  Link,
+} from "@chakra-ui/react";
 import { PasswordInput, PasswordStrengthMeter } from "../../components/ui/password-input";
 import { useRouter } from "next/navigation";
 
@@ -130,10 +141,10 @@ export default function SignupPage() {
               </Center>
               <Center>
                 <Text align={"center"}>
-                  Already have an account?{" "}
-                  <a color={"blue"} href="/login">
+                  Already have an account?
+                  <Link variant={"underline"} colorPalette={"teal"} href="/login">
                     Login
-                  </a>
+                  </Link>
                   .
                 </Text>
               </Center>

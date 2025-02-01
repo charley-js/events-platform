@@ -160,7 +160,6 @@ async function getEventsByUser(events, userId, res) {
   try {
     const result = await events.find({ attendees: { $in: [new ObjectId(userId)] } }).toArray();
     if (result.length === 0) {
-      console.log("No events found");
       return res.status(404).json({ message: `No events found for ${userId}` });
     }
     res.status(200).json(result);

@@ -2,6 +2,20 @@
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  Heading,
+  Text,
+  Stack,
+  Input,
+  Center,
+  Box,
+  Button,
+  ButtonGroup,
+  Field,
+  FieldRequiredIndicator,
+  Link,
+} from "@chakra-ui/react";
+import { PasswordInput } from "../../components/ui/password-input";
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -48,38 +62,43 @@ export default function LoginPage() {
 
   return (
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
-      <div>
-        <h2>Welcome!</h2>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="username">Username: </label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            placeholder="Username..."
-            onChange={(event) => setUsername(event.target.value)}
-            required
-          />
-          <label htmlFor="password">Password: </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            placeholder="Password..."
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
-          <button type="button" onClick={() => googleLogin()}>
-            Sign in with Google
-          </button>
-          <button type="submit" disabled={!accessToken}>
-            Log In
-          </button>
-          <p>
-            Don't have an account yet? <a href="/signup">Sign up.</a>
-          </p>
-        </form>
-      </div>
+      <Center height={"100vh"}>
+        <Stack width={"50%"} align={"center"}>
+          <Heading size={"xl"}>Welcome!</Heading>
+          <Text mb={4}>Please login below</Text>
+          <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
+            <form onSubmit={handleSubmit}>
+              <Field.Root required mb={4}>
+                <Field.Label>
+                  Username:
+                  <FieldRequiredIndicator />
+                </Field.Label>
+                <Input value={username} onChange={(event) => setUsername(event.target.value)} />
+              </Field.Root>
+              <Field.Root required mb={4}>
+                <Field.Label>
+                  Enter Password:
+                  <FieldRequiredIndicator />
+                </Field.Label>
+                <PasswordInput value={password} onChange={(event) => setPassword(event.target.value)} />
+              </Field.Root>
+              <ButtonGroup mb={4}>
+                <Button onClick={() => googleLogin()}>Sign in with Google</Button>
+                <Button type="submit" disabled={!accessToken}>
+                  Log In
+                </Button>
+              </ButtonGroup>
+
+              <Text align={"center"}>
+                Don't have an account yet?{" "}
+                <Link colorPalette={"teal"} variant="underline" href="/signup">
+                  Sign up.
+                </Link>
+              </Text>
+            </form>
+          </Box>
+        </Stack>
+      </Center>
     </GoogleOAuthProvider>
   );
 }

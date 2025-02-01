@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 export default function Dashboard() {
   const [user, setUser] = useState({});
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -22,10 +23,14 @@ export default function Dashboard() {
       .then((res) => res.json())
       .then((data) => setEvents(data))
       .catch((err) => {
-        setEvents();
+        setEvents([]);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
+  if (loading) return <p>Loading...</p>;
   return (
     <div>
       <h1>Welcome, {user.username}!</h1>

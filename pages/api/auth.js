@@ -1,5 +1,5 @@
 import { connect } from "../../database/connection";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { google } from "googleapis";
 
 export default async function handler(req, res) {
@@ -30,14 +30,12 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: "Google authentication failed" });
     }
 
-    return res
-      .status(200)
-      .json({
-        message: "Authentication successful",
-        userId: user._id.toString(),
-        isMod: user.isMod,
-        accessToken: accessToken,
-      });
+    return res.status(200).json({
+      message: "Authentication successful",
+      userId: user._id.toString(),
+      isMod: user.isMod,
+      accessToken: accessToken,
+    });
   } catch (error) {
     console.error("Error during authentication:", error);
     res.status(500).json({ message: "Internal server error" });
