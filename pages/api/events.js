@@ -22,7 +22,7 @@ export default async function handler(req, res) {
   const db = client.db();
   const events = db.collection("events");
   const { method } = req;
-  const { _id, category } = req.query;
+  const { _id, category, userId } = req.query;
   const body = req.body;
 
   try {
@@ -31,6 +31,8 @@ export default async function handler(req, res) {
         await getEvent(events, _id, res);
       } else if (category) {
         await getEventsByCategory(events, category, res);
+      } else if (userId) {
+        await getEventsByUser(events, userId, res);
       } else {
         await getAllEvents(events, res);
       }
@@ -151,5 +153,18 @@ async function getEventsByCategory(events, category, res) {
   } catch (error) {
     console.error("Error fetching events by category", error.message);
     res.status(500).json({ message: "Error fetching events by category" });
+  }
+}
+
+async function getEventsByUser(events, userId, res) {
+  try {
+    const result = await events.find({ attendees: { $in: [new ObjectId(userId)] } }).toArray();
+    if (result.length === 0) {
+      return res.status(404).json({ message: `No events found for ${userId}` });
+    }
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching events by user", error.message);
+    res.status(500).json({ message: "Error fetching events by user" });
   }
 }
