@@ -1,6 +1,8 @@
+"use client";
 import React from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Provider } from "../components/ui/provider";
+import NavBar from "../components/NavBar";
 
 export const Metadata = {
   title: "Events Platform",
@@ -12,7 +14,10 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning={true}>
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
         <body>
-          <Provider>{children}</Provider>
+          <Provider>
+            <NavBar />
+            <main>{children}</main>
+          </Provider>
         </body>
       </GoogleOAuthProvider>
     </html>
