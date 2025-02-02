@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Flex, Stack, Text, Button, ButtonGroup, Center } from "@chakra-ui/react";
+import { Box, Flex, Stack, Text, Button, ButtonGroup, Center, Spinner } from "@chakra-ui/react";
 import { Tag } from "../components/ui/tag";
 
 export default function EventCard({ event, isMod }) {
@@ -8,10 +8,16 @@ export default function EventCard({ event, isMod }) {
   const [signupLoading, setSignupLoading] = useState(false);
   const [editLoading, setEditLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const userId = localStorage.getItem("userId");
   const accessToken = localStorage.getItem("accessToken");
   const eventId = event._id;
   const router = useRouter();
+
+  function handleClick() {
+    setLoading(true);
+    router.push(`events/${eventId}`);
+  }
 
   function handleSignup() {
     setSignupLoading(true);
@@ -73,8 +79,26 @@ export default function EventCard({ event, isMod }) {
       });
   }
 
+  if (loading) {
+    return (
+      <Center>
+        <Spinner size="xl" speed="0.8s" />
+      </Center>
+    );
+  }
+
   return (
-    <Box borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="md" p={4} maxWidth="350px" margin="auto">
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
+      boxShadow="md"
+      p={4}
+      maxWidth="350px"
+      margin="auto"
+      cursor="pointer"
+      onClick={handleClick}
+    >
       <Stack spacing={4}>
         <Text fontSize="xl" fontWeight="bold">
           {event.title}
