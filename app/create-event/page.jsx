@@ -2,7 +2,26 @@
 
 import { React, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Center, Field, FieldRequiredIndicator, Stack, Button, Heading, Box, Input, Textarea } from "@chakra-ui/react";
+import {
+  Center,
+  Field,
+  FieldRequiredIndicator,
+  Stack,
+  Button,
+  Heading,
+  Box,
+  Input,
+  Textarea,
+  FieldErrorText,
+} from "@chakra-ui/react";
+import * as yup from "yup";
+
+const eventSchema = yup.object({
+  title: yup.string().required("Event title is required"),
+  description: yup.string().required("Event description is required"),
+  date: yup.string().required("Event date is required"),
+  category: yup.string().required("Event category is required"),
+});
 
 export default function CreateEventPage() {
   const [eventTitle, setEventTitle] = useState("");
@@ -10,6 +29,12 @@ export default function CreateEventPage() {
   const [eventCategory, setEventCategory] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    title: "",
+    description: "",
+    category: "",
+    date: "",
+  });
   const router = useRouter();
 
   function handleEventCreate(event) {
@@ -21,13 +46,18 @@ export default function CreateEventPage() {
       date: eventDate,
       category: eventCategory,
     };
-    fetch("/api/events", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newEvent),
-    })
+    return eventSchema
+      .validate(newEvent, { abortEarly: false })
+      .then(() => {
+        setErrors({ title: "", description: "", category: "", date: "" });
+        fetch("/api/events", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newEvent),
+        });
+      })
       .then((res) => res.json())
       .then((data) => {
         if (data.message === "Event created successfully") {
@@ -38,8 +68,15 @@ export default function CreateEventPage() {
         }
       })
       .catch((err) => {
-        console.error("Error creating event:", err);
-        alert("Error creating event");
+        if (!err.inner) {
+          console.error("Error:", err);
+        } else {
+          const validationErrors = {};
+          err.inner.forEach((error) => {
+            validationErrors[error.path] = error.message;
+          });
+          setErrors(validationErrors);
+        }
       })
       .finally(() => {
         setButtonLoading(false);
@@ -51,34 +88,38 @@ export default function CreateEventPage() {
       <Stack width={"50%"} align={"center"}>
         <Heading size={"xl"}>Create Event</Heading>
         <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
-          <form onSubmit={handleEventCreate}>
-            <Field.Root required mb={4}>
+          <form onSubmit={handleEventCreate} noValidate>
+            <Field.Root invalid={!!errors.title} required mb={4}>
               <Field.Label>
                 Event Title:
                 <FieldRequiredIndicator />
               </Field.Label>
               <Input value={eventTitle} onChange={(e) => setEventTitle(e.target.value)} />
+              <FieldErrorText>{errors.title}</FieldErrorText>
             </Field.Root>
-            <Field.Root required mb={4}>
+            <Field.Root invalid={!!errors.description} required mb={4}>
               <Field.Label>
                 Event Description:
                 <FieldRequiredIndicator />
               </Field.Label>
               <Textarea value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} />
+              <FieldErrorText>{errors.description}</FieldErrorText>
             </Field.Root>
-            <Field.Root required mb={4}>
+            <Field.Root invalid={!!errors.date} required mb={4}>
               <Field.Label>
                 Event Date:
                 <FieldRequiredIndicator />
               </Field.Label>
-              <input type="datetime-local" value={eventDate} onChange={(e) => setEventDate(e.target.value)} required />
+              <Input type="datetime-local" value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
+              <FieldErrorText>{errors.date}</FieldErrorText>
             </Field.Root>
-            <Field.Root required mb={4}>
+            <Field.Root invalid={!!errors.category} required mb={4}>
               <Field.Label>
                 Event Category:
                 <FieldRequiredIndicator />
               </Field.Label>
               <Input value={eventCategory} onChange={(e) => setEventCategory(e.target.value)} />
+              <FieldErrorText>{errors.category}</FieldErrorText>
             </Field.Root>
             <Button loading={buttonLoading} loadingText={"Creating..."} type={"submit"}>
               Create Event

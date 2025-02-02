@@ -2,12 +2,19 @@
 import { React, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-import { Center, Field, Stack, Button, Heading, Box, Input, Textarea, Spinner } from "@chakra-ui/react";
+import { Center, Field, Stack, Button, Heading, Box, Input, Textarea, Spinner, FieldErrorText } from "@chakra-ui/react";
+import * as yup from "yup";
+
+const eventUpdateSchema = yup.object({
+  title: yup.string().required("Event title is required"),
+  description: yup.string().required("Event description is required"),
+  date: yup.string().required("Event date is required"),
+  category: yup.string().required("Event category is required"),
+});
 
 export default function EditEventPage() {
   const params = useParams();
   const eventId = params.id;
-
   const router = useRouter();
   const [eventInfo, setEventInfo] = useState({
     title: "",
@@ -17,9 +24,9 @@ export default function EditEventPage() {
   });
   const [loading, setLoading] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [errors, setErrors] = useState({ title: "", description: "", date: "", category: "" });
 
   useEffect(() => {
-    console.log("Event ID", eventId);
     fetch(`/api/events?_id=${eventId}`)
       .then((res) => {
         return res.json();
@@ -51,13 +58,17 @@ export default function EditEventPage() {
   function handleSubmit(event) {
     setButtonLoading(true);
     event.preventDefault();
-    fetch(`/api/events?_id=${eventId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(eventInfo),
-    })
+    eventUpdateSchema
+      .validate(eventInfo, { abortEarly: false })
+      .then(() => {
+        return fetch(`/api/events?_id=${eventId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(eventInfo),
+        });
+      })
       .then((res) => res.json())
       .then((data) => {
         if (data.message === "Event updated successfully") {
@@ -68,8 +79,15 @@ export default function EditEventPage() {
         }
       })
       .catch((err) => {
-        console.error("Error updating event", err);
-        alert("Error updating event.");
+        if (!err.inner) {
+          console.error("Error:", err);
+        } else {
+          const validationErrors = {};
+          err.inner.forEach((error) => {
+            validationErrors[error.path] = error.message;
+          });
+          setErrors(validationErrors);
+        }
       })
       .finally(() => {
         setButtonLoading(false);
@@ -89,22 +107,26 @@ export default function EditEventPage() {
       <Stack width={"50%"} align={"center"}>
         <Heading size={"xl"}>Edit Event</Heading>
         <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
-          <form onSubmit={handleSubmit}>
-            <Field.Root mb={4}>
+          <form onSubmit={handleSubmit} noValidate>
+            <Field.Root invalid={!!errors.title} mb={4}>
               <Field.Label>Event Title:</Field.Label>
               <Input value={eventInfo.title} onChange={handleChange} name={"title"} />
+              <FieldErrorText>{errors.title}</FieldErrorText>
             </Field.Root>
-            <Field.Root mb={4}>
+            <Field.Root invalid={!!errors.description} mb={4}>
               <Field.Label>Event Description:</Field.Label>
               <Textarea value={eventInfo.description} onChange={handleChange} name={"description"} />
+              <FieldErrorText>{errors.description}</FieldErrorText>
             </Field.Root>
-            <Field.Root mb={4}>
+            <Field.Root invalid={!!errors.date} mb={4}>
               <Field.Label>Event Date:</Field.Label>
-              <input type="datetime-local" value={eventInfo.date} onChange={handleChange} name={"date"} />
+              <Input type="datetime-local" value={eventInfo.date} onChange={handleChange} name={"date"} />
+              <FieldErrorText>{errors.date}</FieldErrorText>
             </Field.Root>
-            <Field.Root mb={4}>
+            <Field.Root invalid={!!errors.category} mb={4}>
               <Field.Label>Event Category:</Field.Label>
               <Input value={eventInfo.category} onChange={handleChange} name={"category"} />
+              <FieldErrorText>{errors.category}</FieldErrorText>
             </Field.Root>
             <Button loading={buttonLoading} loadingText="Saving..." type={"submit"}>
               Edit Event

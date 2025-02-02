@@ -10,11 +10,10 @@ const eventSchema = yup.object({
 });
 
 const eventUpdateSchema = yup.object({
-  title: yup.string(),
-  description: yup.string(),
-  date: yup.string(),
-  category: yup.string(),
-  attendees: yup.string(),
+  title: yup.string().required("Event title is required"),
+  description: yup.string().required("Event description is required"),
+  date: yup.string().required("Event date is required"),
+  category: yup.string().required("Event category is required"),
 });
 
 export default async function handler(req, res) {
