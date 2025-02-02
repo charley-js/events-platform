@@ -11,7 +11,7 @@ export default function EventsPage() {
   const [buttonLoading, setButtonLoading] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
+  function fetchEvents() {
     const userIsMod = localStorage.getItem("isMod");
     if (userIsMod === "true") {
       setIsMod(true);
@@ -26,6 +26,10 @@ export default function EventsPage() {
           setLoading(false);
         });
     });
+  }
+
+  useEffect(() => {
+    fetchEvents();
   }, []);
 
   function handleCreateEvent() {
@@ -56,7 +60,7 @@ export default function EventsPage() {
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
         {events.map((event) => (
           <Box key={event._id}>
-            <EventCard event={event} isMod={isMod} />
+            <EventCard event={event} isMod={isMod} fetchEvents={fetchEvents} />
           </Box>
         ))}
       </SimpleGrid>

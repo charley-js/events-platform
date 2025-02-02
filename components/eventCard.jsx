@@ -3,19 +3,17 @@ import { useRouter } from "next/navigation";
 import { Box, Flex, Stack, Text, Button, ButtonGroup, Center, Spinner } from "@chakra-ui/react";
 import { Tag } from "../components/ui/tag";
 
-export default function EventCard({ event, isMod }) {
+export default function EventCard({ event, isMod, fetchEvents }) {
   const [attendees, setAttendees] = useState(event.attendees);
   const [signupLoading, setSignupLoading] = useState(false);
   const [editLoading, setEditLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [loading, setLoading] = useState(false);
   const userId = localStorage.getItem("userId");
   const accessToken = localStorage.getItem("accessToken");
   const eventId = event._id;
   const router = useRouter();
 
   function handleClick() {
-    setLoading(true);
     router.push(`events/${eventId}`);
   }
 
@@ -58,7 +56,8 @@ export default function EventCard({ event, isMod }) {
     router.push(`/edit-event/${eventId}`);
   }
 
-  function handleDeleteEvent() {
+  function handleDeleteEvent(event) {
+    event.stopPropagation();
     setDeleteLoading(true);
     fetch(`/api/events?_id=${eventId}`, {
       method: "DELETE",
@@ -70,6 +69,8 @@ export default function EventCard({ event, isMod }) {
       .then((data) => {
         if (data.message === "Event deleted succesfully") {
           alert("Event deleted");
+          fetchEvents();
+          router.replace("/events");
         } else {
           alert("Failed to delete event");
         }
@@ -77,14 +78,6 @@ export default function EventCard({ event, isMod }) {
       .finally(() => {
         setDeleteLoading(false);
       });
-  }
-
-  if (loading) {
-    return (
-      <Center>
-        <Spinner size="xl" speed="0.8s" />
-      </Center>
-    );
   }
 
   return (
@@ -126,7 +119,7 @@ export default function EventCard({ event, isMod }) {
               </Button>
               <Button
                 colorPalette="red"
-                onClick={handleDeleteEvent}
+                onClick={(event) => handleDeleteEvent(event)}
                 loading={deleteLoading}
                 loadingText={"Deleting..."}
               >
