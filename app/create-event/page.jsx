@@ -9,9 +9,11 @@ export default function CreateEventPage() {
   const [eventDescription, setEventDescription] = useState("");
   const [eventCategory, setEventCategory] = useState("");
   const [eventDate, setEventDate] = useState("");
+  const [buttonLoading, setButtonLoading] = useState(false);
   const router = useRouter();
 
   function handleEventCreate(event) {
+    setButtonLoading(true);
     event.preventDefault();
     const newEvent = {
       title: eventTitle,
@@ -38,6 +40,9 @@ export default function CreateEventPage() {
       .catch((err) => {
         console.error("Error creating event:", err);
         alert("Error creating event");
+      })
+      .finally(() => {
+        setButtonLoading(false);
       });
   }
 
@@ -75,7 +80,9 @@ export default function CreateEventPage() {
               </Field.Label>
               <Input value={eventCategory} onChange={(e) => setEventCategory(e.target.value)} />
             </Field.Root>
-            <Button type={"submit"}>Create Event</Button>
+            <Button loading={buttonLoading} loadingText={"Creating..."} type={"submit"}>
+              Create Event
+            </Button>
           </form>
         </Box>
       </Stack>

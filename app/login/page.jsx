@@ -14,12 +14,14 @@ import {
   Field,
   FieldRequiredIndicator,
   Link,
+  Spinner,
 } from "@chakra-ui/react";
 import { PasswordInput } from "../../components/ui/password-input";
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [accessToken, setAccessToken] = useState("");
+  const [buttonLoading, setButtonLoading] = useState(false);
   const router = useRouter();
 
   const googleLogin = useGoogleLogin({
@@ -34,6 +36,7 @@ export default function LoginPage() {
   });
 
   function handleSubmit(event) {
+    setButtonLoading(true);
     event.preventDefault();
     const details = { username, password, accessToken };
     fetch("/api/auth", {
@@ -57,6 +60,9 @@ export default function LoginPage() {
       })
       .catch((err) => {
         console.error("Error:", err);
+      })
+      .finally(() => {
+        setButtonLoading(false);
       });
   }
 
@@ -83,8 +89,10 @@ export default function LoginPage() {
                 <PasswordInput value={password} onChange={(event) => setPassword(event.target.value)} />
               </Field.Root>
               <ButtonGroup mb={4}>
-                <Button onClick={() => googleLogin()}>Sign in with Google</Button>
-                <Button type="submit" disabled={!accessToken}>
+                <Button loadingText={"Authenticating..."} disabled={accessToken} onClick={() => googleLogin()}>
+                  Authenticate with Google
+                </Button>
+                <Button loading={buttonLoading} loadingText={"Logging in..."} type="submit" disabled={!accessToken}>
                   Log In
                 </Button>
               </ButtonGroup>

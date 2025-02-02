@@ -2,7 +2,7 @@
 import { React, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-import { Center, Field, Stack, Button, Heading, Box, Input, Textarea } from "@chakra-ui/react";
+import { Center, Field, Stack, Button, Heading, Box, Input, Textarea, Spinner } from "@chakra-ui/react";
 
 export default function EditEventPage() {
   const params = useParams();
@@ -15,6 +15,8 @@ export default function EditEventPage() {
     date: "",
     category: "",
   });
+  const [loading, setLoading] = useState(true);
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   useEffect(() => {
     console.log("Event ID", eventId);
@@ -32,6 +34,9 @@ export default function EditEventPage() {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [eventId]);
 
@@ -44,6 +49,7 @@ export default function EditEventPage() {
   }
 
   function handleSubmit(event) {
+    setButtonLoading(true);
     event.preventDefault();
     fetch(`/api/events?_id=${eventId}`, {
       method: "PATCH",
@@ -64,7 +70,18 @@ export default function EditEventPage() {
       .catch((err) => {
         console.error("Error updating event", err);
         alert("Error updating event.");
+      })
+      .finally(() => {
+        setButtonLoading(false);
       });
+  }
+
+  if (loading) {
+    return (
+      <Center height={"100vh"} width={"100%"}>
+        <Spinner size="xl" speed="0.8s" />
+      </Center>
+    );
   }
 
   return (
@@ -89,7 +106,9 @@ export default function EditEventPage() {
               <Field.Label>Event Category:</Field.Label>
               <Input value={eventInfo.category} onChange={handleChange} name={"category"} />
             </Field.Root>
-            <Button type={"submit"}>Edit Event</Button>
+            <Button loading={buttonLoading} loadingText="Saving..." type={"submit"}>
+              Edit Event
+            </Button>
           </form>
         </Box>
       </Stack>

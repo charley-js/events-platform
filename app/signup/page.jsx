@@ -37,10 +37,13 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [googleToken, setGoogleToken] = useState("");
   const [errors, setErrors] = useState({ username: "", email: "", password: "" });
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const [googleSuccess, setGoogleSuccess] = useState(false);
   const router = useRouter();
 
   function handleGoogleSuccess(res) {
     setGoogleToken(res.credential);
+    setGoogleSuccess(true);
   }
 
   function handleGoogleFailure(error) {
@@ -49,6 +52,7 @@ export default function SignupPage() {
   }
 
   function handleSubmit(event) {
+    setButtonLoading(true);
     event.preventDefault();
     const user = { username, email, password, events: [], googleToken, isMod: false };
 
@@ -83,6 +87,9 @@ export default function SignupPage() {
           });
           setErrors(validationErrors);
         }
+      })
+      .finally(() => {
+        setButtonLoading(false);
       });
   }
 
@@ -125,17 +132,22 @@ export default function SignupPage() {
               </Field.Root>
               {errors.password && <p>{errors.password}</p>}
               <Box display="flex" justifyContent="center" mb={4}>
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={handleGoogleFailure}
-                  clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-                  theme="outline"
-                  size="medium"
-                  style={{ transform: "scale(0.85)" }}
-                />
+                {googleSuccess ? (
+                  <Button disabled>✅ Google Authenticated</Button>
+                ) : (
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleFailure}
+                    render={(renderProps) => (
+                      <Button onClick={renderProps.onClick} disabled={googleLoginSuccess}>
+                        Continue with Google
+                      </Button>
+                    )}
+                  />
+                )}
               </Box>
               <Center mb={4}>
-                <Button type="submit" disabled={!googleToken}>
+                <Button type="submit" disabled={!googleToken} loading={buttonLoading} loadingText={"Signing up..."}>
                   Sign Up
                 </Button>
               </Center>

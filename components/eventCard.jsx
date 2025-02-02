@@ -5,17 +5,23 @@ import { Tag } from "../components/ui/tag";
 
 export default function EventCard({ event, isMod }) {
   const [attendees, setAttendees] = useState(event.attendees);
+  const [signupLoading, setSignupLoading] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const userId = localStorage.getItem("userId");
   const accessToken = localStorage.getItem("accessToken");
   const eventId = event._id;
   const router = useRouter();
 
   function handleSignup() {
+    setSignupLoading(true);
     if (!userId || !accessToken) {
+      setSignupLoading(false);
       alert("Log in and Google authentication required");
       return;
     }
     if (attendees.includes(userId)) {
+      setSignupLoading(false);
       alert("You are already signed up for this event");
       return;
     }
@@ -35,14 +41,19 @@ export default function EventCard({ event, isMod }) {
         } else {
           alert("Failed to sign up for event");
         }
+      })
+      .finally(() => {
+        setSignupLoading(false);
       });
   }
 
   function handleEditEvent() {
+    setEditLoading(true);
     router.push(`/edit-event/${eventId}`);
   }
 
   function handleDeleteEvent() {
+    setDeleteLoading(true);
     fetch(`/api/events?_id=${eventId}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -56,6 +67,9 @@ export default function EventCard({ event, isMod }) {
         } else {
           alert("Failed to delete event");
         }
+      })
+      .finally(() => {
+        setDeleteLoading(false);
       });
   }
 
@@ -75,7 +89,7 @@ export default function EventCard({ event, isMod }) {
           Created on: {new Date(event.created_at).toLocaleDateString()}
         </Text>
         <Center>
-          <Button width={"30%"} onClick={handleSignup}>
+          <Button width={"50%"} onClick={handleSignup} loading={signupLoading} loadingText={"Signing up..."}>
             Sign up
           </Button>
         </Center>
@@ -83,10 +97,15 @@ export default function EventCard({ event, isMod }) {
         {isMod && (
           <Center>
             <ButtonGroup gap={6}>
-              <Button colorPalette="blue" onClick={handleEditEvent}>
+              <Button colorPalette="blue" onClick={handleEditEvent} loading={editLoading} loadingText={"Loading..."}>
                 Edit
               </Button>
-              <Button colorPalette="red" onClick={handleDeleteEvent}>
+              <Button
+                colorPalette="red"
+                onClick={handleDeleteEvent}
+                loading={deleteLoading}
+                loadingText={"Deleting..."}
+              >
                 Delete
               </Button>
             </ButtonGroup>

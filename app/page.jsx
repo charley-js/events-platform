@@ -1,7 +1,7 @@
 "use client";
 import { React, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardBody, Heading, Box, Stack, Text, HStack } from "@chakra-ui/react";
+import { Card, CardBody, Heading, Box, Stack, Text, HStack, Center, Spinner } from "@chakra-ui/react";
 import { Avatar } from "../components/ui/avatar";
 
 export default function Dashboard() {
@@ -32,7 +32,13 @@ export default function Dashboard() {
       });
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <Center height={"100vh"} width={"100%"}>
+        <Spinner size="xl" speed="0.8s" />
+      </Center>
+    );
+  }
   return (
     <Box p={6} maxW="800px" mx="auto">
       <Card.Root mb={6} p={4} borderRadius="lg" boxShadow="md">
