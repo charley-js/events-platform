@@ -1,10 +1,19 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { Box, Flex, Link, Text } from "@chakra-ui/react";
+import { Box, Flex, Link, Text, Button } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function NavBar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  function handleClick() {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("isMod");
+    router.push("/login");
+  }
 
   if (pathname === "/login" || pathname === "/signup") return null;
 
@@ -22,6 +31,9 @@ export default function NavBar() {
             Events
           </Link>
         </Flex>
+        <Button onClick={handleClick} variant="outline" color="white">
+          Log Out
+        </Button>
       </Flex>
     </Box>
   );
