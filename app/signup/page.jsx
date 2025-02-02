@@ -14,6 +14,7 @@ import {
   Box,
   Link,
 } from "@chakra-ui/react";
+import zxcvbn from "zxcvbn";
 import { PasswordInput, PasswordStrengthMeter } from "../../components/ui/password-input";
 import { useRouter } from "next/navigation";
 
@@ -35,12 +36,18 @@ export default function SignupPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState(0);
   const [googleToken, setGoogleToken] = useState("");
   const [errors, setErrors] = useState({ username: "", email: "", password: "" });
   const [buttonLoading, setButtonLoading] = useState(false);
   const [googleSuccess, setGoogleSuccess] = useState(false);
   const router = useRouter();
 
+  function handlePassword(event) {
+    setPassword(event.target.value);
+    const strength = zxcvbn(event.target.value).score;
+    setPasswordStrength(strength);
+  }
   function handleGoogleSuccess(res) {
     setGoogleToken(res.credential);
     setGoogleSuccess(true);
@@ -123,8 +130,8 @@ export default function SignupPage() {
                   Enter Password:
                   <FieldRequiredIndicator />
                 </Field.Label>
-                <PasswordInput value={password} onChange={(event) => setPassword(event.target.value)} />
-                <PasswordStrengthMeter value={password} />
+                <PasswordInput value={password} onChange={handlePassword} />
+                <PasswordStrengthMeter value={passwordStrength} />
                 <Field.HelperText>
                   Requires at least one uppercase letter, one lowercase letter, one number and one special character.
                   Must be at least 8 characters long.
