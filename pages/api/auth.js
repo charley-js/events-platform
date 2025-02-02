@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     }
     const user = await users.findOne({ username });
     if (!user) {
-      return res.status(401).json({ message: "Incorrect username or password" });
+      return res.status(401).json({ message: "Invalid username or password" });
     }
     const verify = await bcrypt.compare(password, user.password);
     if (!verify) {

@@ -15,6 +15,7 @@ import {
   FieldRequiredIndicator,
   Link,
   Spinner,
+  FieldErrorText,
 } from "@chakra-ui/react";
 import { PasswordInput } from "../../components/ui/password-input";
 export default function LoginPage() {
@@ -22,6 +23,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [errors, setErrors] = useState({ username: "", password: "" });
   const router = useRouter();
 
   const googleLogin = useGoogleLogin({
@@ -39,6 +41,24 @@ export default function LoginPage() {
     setButtonLoading(true);
     event.preventDefault();
     const details = { username, password, accessToken };
+    setErrors({ username: "", password: "" });
+    if (!username) {
+      setErrors((prev) => ({
+        ...prev,
+        username: "Username is required",
+      }));
+    }
+    if (!password) {
+      setErrors((prev) => ({
+        ...prev,
+        password: "Password is required",
+      }));
+    }
+
+    if (!username || !password) {
+      setButtonLoading(false);
+      return;
+    }
     fetch("/api/auth", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -54,6 +74,11 @@ export default function LoginPage() {
           localStorage.setItem("isMod", data.isMod);
           alert("Logged in succesfully");
           router.push("/");
+        } else if (data.message === "Invalid username or password") {
+          setErrors({
+            username: "Incorrect username or password",
+            password: "Incorrect username or password",
+          });
         } else {
           alert("Error during login");
         }
@@ -73,20 +98,22 @@ export default function LoginPage() {
           <Heading size={"xl"}>Welcome!</Heading>
           <Text mb={4}>Please login below</Text>
           <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
-            <form onSubmit={handleSubmit}>
-              <Field.Root required mb={4}>
+            <form onSubmit={handleSubmit} noValidate>
+              <Field.Root invalid={!!errors.username} required mb={4}>
                 <Field.Label>
                   Username:
                   <FieldRequiredIndicator />
                 </Field.Label>
                 <Input value={username} onChange={(event) => setUsername(event.target.value)} />
+                <FieldErrorText>{errors.username}</FieldErrorText>
               </Field.Root>
-              <Field.Root required mb={4}>
+              <Field.Root invalid={!!errors.password} required mb={4}>
                 <Field.Label>
                   Enter Password:
                   <FieldRequiredIndicator />
                 </Field.Label>
                 <PasswordInput value={password} onChange={(event) => setPassword(event.target.value)} />
+                <FieldErrorText>{errors.password}</FieldErrorText>
               </Field.Root>
               <ButtonGroup mb={4}>
                 <Button loadingText={"Authenticating..."} disabled={accessToken} onClick={() => googleLogin()}>

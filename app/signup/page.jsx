@@ -80,6 +80,11 @@ export default function SignupPage() {
         if (data.message === "User created successfully") {
           alert("Sign up successful");
           router.push("/login");
+        } else if (data.message === "User already exists") {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            username: "Username is taken, try something else.",
+          }));
         } else {
           alert("Error during Sign up");
         }
@@ -107,37 +112,37 @@ export default function SignupPage() {
           <Heading size={"xl"}>Welcome!</Heading>
           <Text mb={4}>Please sign up below</Text>
           <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
-            <form onSubmit={handleSubmit}>
-              <Field.Root required mb={4}>
+            <form onSubmit={handleSubmit} noValidate>
+              <Field.Root invalid={!!errors.username} required mb={4}>
                 <Field.Label>
                   Enter Username:
                   <FieldRequiredIndicator />
                 </Field.Label>
                 <Input value={username} onChange={(event) => setUsername(event.target.value)} />
+                <Field.ErrorText>{errors.username}</Field.ErrorText>
               </Field.Root>
-              {errors.username && <p>{errors.username}</p>}
-              <Field.Root required mb={4}>
+              <Field.Root invalid={!!errors.email} required mb={4}>
                 <Field.Label>
                   Enter Email:
                   <FieldRequiredIndicator />
                 </Field.Label>
                 <Input value={email} onChange={(event) => setEmail(event.target.value)} />
+                <Field.ErrorText>{errors.email}</Field.ErrorText>
                 <Field.HelperText>We will never give out your email address.</Field.HelperText>
               </Field.Root>
-              {errors.email && <p>{errors.email}</p>}
-              <Field.Root required mb={4}>
+              <Field.Root invalid={!!errors.password} required mb={4}>
                 <Field.Label>
                   Enter Password:
                   <FieldRequiredIndicator />
                 </Field.Label>
                 <PasswordInput value={password} onChange={handlePassword} />
+                <Field.ErrorText>{errors.password}</Field.ErrorText>
                 <PasswordStrengthMeter value={passwordStrength} />
                 <Field.HelperText>
                   Requires at least one uppercase letter, one lowercase letter, one number and one special character.
                   Must be at least 8 characters long.
                 </Field.HelperText>
               </Field.Root>
-              {errors.password && <p>{errors.password}</p>}
               <Box display="flex" justifyContent="center" mb={4}>
                 {googleSuccess ? (
                   <Button disabled>✅ Google Authenticated</Button>
