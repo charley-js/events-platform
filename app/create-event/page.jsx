@@ -3,6 +3,7 @@
 import { React, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  Alert,
   Center,
   Field,
   FieldRequiredIndicator,
@@ -35,6 +36,7 @@ export default function CreateEventPage() {
     category: "",
     date: "",
   });
+  const [alert, setAlert] = useState({ message: "", status: "" });
   const router = useRouter();
 
   function handleEventCreate(event) {
@@ -50,7 +52,7 @@ export default function CreateEventPage() {
       .validate(newEvent, { abortEarly: false })
       .then(() => {
         setErrors({ title: "", description: "", category: "", date: "" });
-        fetch("/api/events", {
+        return fetch("/api/events", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -58,13 +60,17 @@ export default function CreateEventPage() {
           body: JSON.stringify(newEvent),
         });
       })
-      .then((res) => res.json())
+      .then((res) => {
+        return res.json();
+      })
       .then((data) => {
         if (data.message === "Event created successfully") {
-          alert("Event created successfully!");
-          router.push("/events");
+          setAlert({ message: "Event created.", status: "success" });
+          setTimeout(() => {
+            router.push("/events");
+          }, 3000);
         } else {
-          alert("Error creating event");
+          setAlert({ message: "Error creating event.", status: "error" });
         }
       })
       .catch((err) => {
@@ -86,6 +92,15 @@ export default function CreateEventPage() {
   return (
     <Center height={"100vh"}>
       <Stack width={"50%"} align={"center"}>
+        {alert.message && (
+          <Alert.Root zindex={9999} status={alert.status} top={4}>
+            <Alert.Indicator />
+            <Alert.Content>
+              <Alert.Title>{alert.status === "error" ? "Error!" : "Success!"}</Alert.Title>
+              <Alert.Description>{alert.message}</Alert.Description>
+            </Alert.Content>
+          </Alert.Root>
+        )}
         <Heading size={"xl"}>Create Event</Heading>
         <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
           <form onSubmit={handleEventCreate} noValidate>

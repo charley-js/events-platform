@@ -16,6 +16,7 @@ import {
   Link,
   Spinner,
   FieldErrorText,
+  Alert,
 } from "@chakra-ui/react";
 import { PasswordInput } from "../../components/ui/password-input";
 export default function LoginPage() {
@@ -24,6 +25,7 @@ export default function LoginPage() {
   const [accessToken, setAccessToken] = useState("");
   const [buttonLoading, setButtonLoading] = useState(false);
   const [errors, setErrors] = useState({ username: "", password: "" });
+  const [alert, setAlert] = useState({ message: "", status: "" });
   const router = useRouter();
 
   const googleLogin = useGoogleLogin({
@@ -32,7 +34,7 @@ export default function LoginPage() {
     },
     onError: (error) => {
       console.error("Google login failed:", error);
-      alert("Google login failed");
+      setAlert({ message: "Authentication failed.", status: "error" });
     },
     scope: "https://www.googleapis.com/auth/calendar",
   });
@@ -72,15 +74,17 @@ export default function LoginPage() {
           localStorage.setItem("userId", data.userId);
           localStorage.setItem("accessToken", data.accessToken);
           localStorage.setItem("isMod", data.isMod);
-          alert("Logged in succesfully");
-          router.push("/");
+          setAlert({ message: "Logged in succesfully.", status: "success" });
+          setTimeout(() => {
+            router.push("/");
+          }, 3000);
         } else if (data.message === "Invalid username or password") {
           setErrors({
             username: "Incorrect username or password",
             password: "Incorrect username or password",
           });
         } else {
-          alert("Error during login");
+          setAlert({ message: "Error during login.", status: "error" });
         }
       })
       .catch((err) => {
@@ -95,6 +99,15 @@ export default function LoginPage() {
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
       <Center height={"100vh"}>
         <Stack width={"50%"} align={"center"}>
+          {alert.message && (
+            <Alert.Root zindex={9999} status={alert.status} top={4}>
+              <Alert.Indicator />
+              <Alert.Content>
+                <Alert.Title>{alert.status === "error" ? "Error!" : "Success!"}</Alert.Title>
+                <Alert.Description>{alert.message}</Alert.Description>
+              </Alert.Content>
+            </Alert.Root>
+          )}
           <Heading size={"xl"}>Welcome!</Heading>
           <Text mb={4}>Please login below</Text>
           <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>

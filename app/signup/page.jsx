@@ -13,6 +13,7 @@ import {
   Center,
   Box,
   Link,
+  Alert,
 } from "@chakra-ui/react";
 import zxcvbn from "zxcvbn";
 import { PasswordInput, PasswordStrengthMeter } from "../../components/ui/password-input";
@@ -41,6 +42,7 @@ export default function SignupPage() {
   const [errors, setErrors] = useState({ username: "", email: "", password: "" });
   const [buttonLoading, setButtonLoading] = useState(false);
   const [googleSuccess, setGoogleSuccess] = useState(false);
+  const [alert, setAlert] = useState({ message: "", status: "" });
   const router = useRouter();
 
   function handlePassword(event) {
@@ -55,7 +57,7 @@ export default function SignupPage() {
 
   function handleGoogleFailure(error) {
     console.error(error);
-    alert("Google authentication failed.");
+    setAlert({ message: "Authentication failed.", status: "error" });
   }
 
   function handleSubmit(event) {
@@ -78,15 +80,17 @@ export default function SignupPage() {
       })
       .then((data) => {
         if (data.message === "User created successfully") {
-          alert("Sign up successful");
-          router.push("/login");
+          setAlert({ message: "User created succesfully", status: "success" });
+          setTimeout(() => {
+            router.push("/login");
+          }, 3000);
         } else if (data.message === "User already exists") {
           setErrors((prevErrors) => ({
             ...prevErrors,
             username: "Username is taken, try something else.",
           }));
         } else {
-          alert("Error during Sign up");
+          setAlert({ message: "Error during signup.", status: "error" });
         }
       })
       .catch((err) => {
@@ -109,6 +113,15 @@ export default function SignupPage() {
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
       <Center height={"100vh"}>
         <Stack width={"50%"} align={"center"}>
+          {alert.message && (
+            <Alert.Root zindex={9999} status={alert.status} top={4}>
+              <Alert.Indicator />
+              <Alert.Content>
+                <Alert.Title>{alert.status === "error" ? "Error!" : "Success!"}</Alert.Title>
+                <Alert.Description>{alert.message}</Alert.Description>
+              </Alert.Content>
+            </Alert.Root>
+          )}
           <Heading size={"xl"}>Welcome!</Heading>
           <Text mb={4}>Please sign up below</Text>
           <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
@@ -150,11 +163,7 @@ export default function SignupPage() {
                   <GoogleLogin
                     onSuccess={handleGoogleSuccess}
                     onError={handleGoogleFailure}
-                    render={(renderProps) => (
-                      <Button onClick={renderProps.onClick} disabled={googleLoginSuccess}>
-                        Continue with Google
-                      </Button>
-                    )}
+                    render={(renderProps) => <Button onClick={renderProps.onClick}>Continue with Google</Button>}
                   />
                 )}
               </Box>

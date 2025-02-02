@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Flex, Stack, Text, Button, ButtonGroup, Center, Spinner } from "@chakra-ui/react";
+import { Box, Alert, Stack, Text, Button, ButtonGroup, Center } from "@chakra-ui/react";
 import { Tag } from "../components/ui/tag";
 
 export default function EventCard({ event, isMod, fetchEvents }) {
@@ -8,6 +8,7 @@ export default function EventCard({ event, isMod, fetchEvents }) {
   const [signupLoading, setSignupLoading] = useState(false);
   const [editLoading, setEditLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [alert, setAlert] = useState({ message: "", status: "" });
   const userId = localStorage.getItem("userId");
   const accessToken = localStorage.getItem("accessToken");
   const eventId = event._id;
@@ -21,12 +22,12 @@ export default function EventCard({ event, isMod, fetchEvents }) {
     setSignupLoading(true);
     if (!userId || !accessToken) {
       setSignupLoading(false);
-      alert("Log in and Google authentication required");
+      setAlert({ message: "Log in and Google authentication required", status: "error" });
       return;
     }
     if (attendees.includes(userId)) {
       setSignupLoading(false);
-      alert("You are already signed up for this event");
+      setAlert({ message: "You are already signed up for this event", status: "error" });
       return;
     }
     fetch(`/api/event-signup`, {
@@ -41,9 +42,9 @@ export default function EventCard({ event, isMod, fetchEvents }) {
       .then((data) => {
         if (data.message === "Event added to Google Calendar") {
           setAttendees([...attendees, userId]);
-          alert("Signed up and added to Google Calendar");
+          setAlert({ message: "Signed up and added to Google Calendar", status: "success" });
         } else {
-          alert("Failed to sign up for event");
+          setAlert({ message: "Failed to sign up for event", status: "error" });
         }
       })
       .finally(() => {
@@ -51,7 +52,8 @@ export default function EventCard({ event, isMod, fetchEvents }) {
       });
   }
 
-  function handleEditEvent() {
+  function handleEditEvent(event) {
+    event.stopPropagation();
     setEditLoading(true);
     router.push(`/edit-event/${eventId}`);
   }
@@ -68,11 +70,13 @@ export default function EventCard({ event, isMod, fetchEvents }) {
       })
       .then((data) => {
         if (data.message === "Event deleted succesfully") {
-          alert("Event deleted");
+          setAlert({ message: "Event deleted", status: "success" });
           fetchEvents();
-          router.replace("/events");
+          setTimeout(() => {
+            router.replace("/events");
+          }, 3000);
         } else {
-          alert("Failed to delete event");
+          setAlert({ message: "Failed to delete event", status: "error" });
         }
       })
       .finally(() => {
@@ -92,6 +96,15 @@ export default function EventCard({ event, isMod, fetchEvents }) {
       cursor="pointer"
       onClick={handleClick}
     >
+      {alert.message && (
+        <Alert.Root zindex={9999} status={alert.status} top={4}>
+          <Alert.Indicator />
+          <Alert.Content>
+            <Alert.Title>{alert.status === "error" ? "Error!" : "Success!"}</Alert.Title>
+            <Alert.Description>{alert.message}</Alert.Description>
+          </Alert.Content>
+        </Alert.Root>
+      )}
       <Stack spacing={4}>
         <Text fontSize="xl" fontWeight="bold">
           {event.title}
@@ -114,7 +127,12 @@ export default function EventCard({ event, isMod, fetchEvents }) {
         {isMod && (
           <Center>
             <ButtonGroup gap={6}>
-              <Button colorPalette="blue" onClick={handleEditEvent} loading={editLoading} loadingText={"Loading..."}>
+              <Button
+                colorPalette="blue"
+                onClick={(event) => handleEditEvent(event)}
+                loading={editLoading}
+                loadingText={"Loading..."}
+              >
                 Edit
               </Button>
               <Button

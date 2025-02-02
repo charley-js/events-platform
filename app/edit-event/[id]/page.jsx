@@ -2,7 +2,19 @@
 import { React, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-import { Center, Field, Stack, Button, Heading, Box, Input, Textarea, Spinner, FieldErrorText } from "@chakra-ui/react";
+import {
+  Alert,
+  Center,
+  Field,
+  Stack,
+  Button,
+  Heading,
+  Box,
+  Input,
+  Textarea,
+  Spinner,
+  FieldErrorText,
+} from "@chakra-ui/react";
 import * as yup from "yup";
 
 const eventUpdateSchema = yup.object({
@@ -25,7 +37,7 @@ export default function EditEventPage() {
   const [loading, setLoading] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
   const [errors, setErrors] = useState({ title: "", description: "", date: "", category: "" });
-
+  const [alert, setAlert] = useState({ message: "", status: "" });
   useEffect(() => {
     fetch(`/api/events?_id=${eventId}`)
       .then((res) => {
@@ -72,10 +84,12 @@ export default function EditEventPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.message === "Event updated successfully") {
-          alert("Event updated successfully!");
-          router.push(`/events`);
+          setAlert({ message: "Event updated succesfully.", status: "success" });
+          setTimeout(() => {
+            router.push("/events");
+          }, 3000);
         } else {
-          alert("Failed to update event.");
+          setAlert({ message: "Failed to update event.", status: "error" });
         }
       })
       .catch((err) => {
@@ -105,6 +119,15 @@ export default function EditEventPage() {
   return (
     <Center height={"100vh"}>
       <Stack width={"50%"} align={"center"}>
+        {alert.message && (
+          <Alert.Root zindex={9999} status={alert.status} top={4}>
+            <Alert.Indicator />
+            <Alert.Content>
+              <Alert.Title>{alert.status === "error" ? "Error!" : "Success!"}</Alert.Title>
+              <Alert.Description>{alert.message}</Alert.Description>
+            </Alert.Content>
+          </Alert.Root>
+        )}
         <Heading size={"xl"}>Edit Event</Heading>
         <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
           <form onSubmit={handleSubmit} noValidate>
