@@ -2,6 +2,7 @@
 
 import { React, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Center, Field, FieldRequiredIndicator, Stack, Button, Heading, Box, Input, Textarea } from "@chakra-ui/react";
 
 export default function CreateEventPage() {
   const [eventTitle, setEventTitle] = useState("");
@@ -41,27 +42,43 @@ export default function CreateEventPage() {
   }
 
   return (
-    <div>
-      <h1>Create Event</h1>
-      <form onSubmit={handleEventCreate}>
-        <div>
-          <label>Title:</label>
-          <input type="text" value={eventTitle} onChange={(e) => setEventTitle(e.target.value)} required />
-        </div>
-        <div>
-          <label>Description:</label>
-          <textarea value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} required />
-        </div>
-        <div>
-          <label>Date:</label>
-          <input type="datetime-local" value={eventDate} onChange={(e) => setEventDate(e.target.value)} required />
-        </div>
-        <div>
-          <label>Category:</label>
-          <input type="text" value={eventCategory} onChange={(e) => setEventCategory(e.target.value)} required />
-        </div>
-        <button type="submit">Create Event</button>
-      </form>
-    </div>
+    <Center height={"100vh"}>
+      <Stack width={"50%"} align={"center"}>
+        <Heading size={"xl"}>Create Event</Heading>
+        <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
+          <form onSubmit={handleEventCreate}>
+            <Field.Root required mb={4}>
+              <Field.Label>
+                Event Title:
+                <FieldRequiredIndicator />
+              </Field.Label>
+              <Input value={eventTitle} onChange={(e) => setEventTitle(e.target.value)} />
+            </Field.Root>
+            <Field.Root required mb={4}>
+              <Field.Label>
+                Event Description:
+                <FieldRequiredIndicator />
+              </Field.Label>
+              <Textarea value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} />
+            </Field.Root>
+            <Field.Root required mb={4}>
+              <Field.Label>
+                Event Date:
+                <FieldRequiredIndicator />
+              </Field.Label>
+              <input type="datetime-local" value={eventDate} onChange={(e) => setEventDate(e.target.value)} required />
+            </Field.Root>
+            <Field.Root required mb={4}>
+              <Field.Label>
+                Event Category:
+                <FieldRequiredIndicator />
+              </Field.Label>
+              <Input value={eventCategory} onChange={(e) => setEventCategory(e.target.value)} />
+            </Field.Root>
+            <Button type={"submit"}>Create Event</Button>
+          </form>
+        </Box>
+      </Stack>
+    </Center>
   );
 }
