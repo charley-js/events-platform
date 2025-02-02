@@ -2,6 +2,7 @@
 import { React, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
+import { Center, Field, Stack, Button, Heading, Box, Input, Textarea } from "@chakra-ui/react";
 
 export default function EditEventPage() {
   const params = useParams();
@@ -67,27 +68,31 @@ export default function EditEventPage() {
   }
 
   return (
-    <div>
-      <h2>Edit Event</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Event Title</label>
-          <input type="text" name="title" value={eventInfo.title} onChange={handleChange} />
-        </div>
-        <div>
-          <label>Event Description</label>
-          <textarea name="description" value={eventInfo.description} onChange={handleChange} />
-        </div>
-        <div>
-          <label>Event Date</label>
-          <input type="datetime-local" name="date" value={eventInfo.date} onChange={handleChange} />
-        </div>
-        <div>
-          <label>Category</label>
-          <input type="text" name="category" value={eventInfo.category} onChange={handleChange} />
-        </div>
-        <button type="submit">Update Event</button>
-      </form>
-    </div>
+    <Center height={"100vh"}>
+      <Stack width={"50%"} align={"center"}>
+        <Heading size={"xl"}>Edit Event</Heading>
+        <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
+          <form onSubmit={handleSubmit}>
+            <Field.Root mb={4}>
+              <Field.Label>Event Title:</Field.Label>
+              <Input value={eventInfo.title} onChange={handleChange} name={"title"} />
+            </Field.Root>
+            <Field.Root mb={4}>
+              <Field.Label>Event Description:</Field.Label>
+              <Textarea value={eventInfo.description} onChange={handleChange} name={"description"} />
+            </Field.Root>
+            <Field.Root mb={4}>
+              <Field.Label>Event Date:</Field.Label>
+              <input type="datetime-local" value={eventInfo.date} onChange={handleChange} name={"date"} />
+            </Field.Root>
+            <Field.Root mb={4}>
+              <Field.Label>Event Category:</Field.Label>
+              <Input value={eventInfo.category} onChange={handleChange} name={"category"} />
+            </Field.Root>
+            <Button type={"submit"}>Edit Event</Button>
+          </form>
+        </Box>
+      </Stack>
+    </Center>
   );
 }
