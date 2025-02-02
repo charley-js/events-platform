@@ -1,5 +1,7 @@
 import { React, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Box, Flex, Stack, Text, Button, ButtonGroup, Center } from "@chakra-ui/react";
+import { Tag } from "../components/ui/tag";
 
 export default function EventCard({ event, isMod }) {
   const [attendees, setAttendees] = useState(event.attendees);
@@ -58,20 +60,39 @@ export default function EventCard({ event, isMod }) {
   }
 
   return (
-    <div>
-      <h2>{event.title}</h2>
-      <p>{event.description}</p>
-      <p>Date: {new Date(event.date).toLocaleDateString()}</p>
-      <p>Category: {event.category}</p>
-      <p>{attendees.length} Attending</p>
-      <p>Created on: {new Date(event.created_at).toLocaleDateString()}</p>
-      <button onClick={handleSignup}>Sign up</button>
-      {isMod && (
-        <div>
-          <button onClick={handleEditEvent}>Edit</button>
-          <button onClick={handleDeleteEvent}>Delete</button>
-        </div>
-      )}
-    </div>
+    <Box borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="md" p={4} maxWidth="350px" margin="auto">
+      <Stack spacing={4}>
+        <Text fontSize="xl" fontWeight="bold">
+          {event.title}
+        </Text>
+        <Tag size="sm">{event.category}</Tag>
+        <Text>{event.description}</Text>
+        <Text fontSize="sm" color="gray">
+          {new Date(event.date).toLocaleDateString()}
+        </Text>
+        <Text>{event.attendees.length} Attending</Text>
+        <Text fontSize="sm" color="gray.400" mb={"4"}>
+          Created on: {new Date(event.created_at).toLocaleDateString()}
+        </Text>
+        <Center>
+          <Button width={"30%"} onClick={handleSignup}>
+            Sign up
+          </Button>
+        </Center>
+
+        {isMod && (
+          <Center>
+            <ButtonGroup gap={6}>
+              <Button colorPalette="blue" onClick={handleEditEvent}>
+                Edit
+              </Button>
+              <Button colorPalette="red" onClick={handleDeleteEvent}>
+                Delete
+              </Button>
+            </ButtonGroup>
+          </Center>
+        )}
+      </Stack>
+    </Box>
   );
 }

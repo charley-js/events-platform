@@ -2,6 +2,7 @@
 import { React, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import EventCard from "../../components/EventCard";
+import { Heading, Button, SimpleGrid, Box, Flex } from "@chakra-ui/react";
 
 export default function EventsPage() {
   const [events, setEvents] = useState([]);
@@ -25,11 +26,23 @@ export default function EventsPage() {
 
   return (
     <div>
-      <h1>All Events</h1>
-      {isMod && <button onClick={handleCreateEvent}>Create Event</button>}
-      {events.map((event) => (
-        <EventCard key={event._id} event={event} isMod={isMod} />
-      ))}
+      <Flex justify="center" align="center" mb={8}>
+        <Heading size={"2xl"} textAlign={"center"} flex="1">
+          All Events
+        </Heading>
+        {isMod && (
+          <Button onClick={handleCreateEvent} ml="auto" right={"8"}>
+            Create Event
+          </Button>
+        )}
+      </Flex>
+      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+        {events.map((event) => (
+          <Box key={event._id}>
+            <EventCard event={event} isMod={isMod} />
+          </Box>
+        ))}
+      </SimpleGrid>
     </div>
   );
 }
