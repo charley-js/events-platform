@@ -46,7 +46,7 @@ export default [
     description: "The annual firework display on the River Thames, ending the year with a bang!",
     date: "2025-12-31T23:00",
     category: "Festivities",
-    created_at: "1738600607559",
+    created_at: "2025-01-14 22:07:00",
     attendees: [],
   },
   {

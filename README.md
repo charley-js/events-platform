@@ -155,7 +155,7 @@ npm run dev
 
 The application will open on http://localhost:3000. If you are not already logged in, it will redirect you to login. Otherwise, it will redirect you to your dashboard.
 
-1. Log in with the provided user account.
+1. Log in with the provided user account and authenticate with the provided Google Account.
 
 2. Upon login you will be met with the dashboard, currently Your Events will be empty.
 
