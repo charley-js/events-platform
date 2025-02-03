@@ -17,6 +17,7 @@ import {
   Spinner,
   FieldErrorText,
   Alert,
+  Image,
 } from "@chakra-ui/react";
 import { PasswordInput } from "../../components/ui/password-input";
 export default function LoginPage() {
@@ -98,8 +99,9 @@ export default function LoginPage() {
 
   return (
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
-      <Center height={"100vh"}>
+      <Center height={"100vh"} alignItems="flex-start" pt={10}>
         <Stack width={"50%"} align={"center"}>
+          <Image mb={"16"} width={"85%"} src="/schedulo-logo.svg" mt={"8"} />
           {alert.message && (
             <Alert.Root zindex={9999} status={alert.status} top={4}>
               <Alert.Indicator />
@@ -109,9 +111,10 @@ export default function LoginPage() {
               </Alert.Content>
             </Alert.Root>
           )}
-          <Heading size={"xl"}>Welcome!</Heading>
-          <Text mb={4}>Please login below</Text>
-          <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
+          <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"} mt={"6"}>
+            <Heading textAlign={"center"} mb={"6"}>
+              Log In
+            </Heading>
             <form onSubmit={handleSubmit} noValidate>
               <Field.Root invalid={!!errors.username} required mb={4}>
                 <Field.Label>

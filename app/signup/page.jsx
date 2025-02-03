@@ -14,6 +14,7 @@ import {
   Box,
   Link,
   Alert,
+  Image,
 } from "@chakra-ui/react";
 import zxcvbn from "zxcvbn";
 import { PasswordInput, PasswordStrengthMeter } from "../../components/ui/password-input";
@@ -111,8 +112,9 @@ export default function SignupPage() {
 
   return (
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
-      <Center height={"100vh"}>
+      <Center height={"100vh"} alignItems="flex-start">
         <Stack width={"50%"} align={"center"}>
+          <Image mb={"12"} width={"85%"} src="/schedulo-logo.svg" mt={"8"} />
           {alert.message && (
             <Alert.Root zindex={9999} status={alert.status} top={4}>
               <Alert.Indicator />
@@ -122,9 +124,10 @@ export default function SignupPage() {
               </Alert.Content>
             </Alert.Root>
           )}
-          <Heading size={"xl"}>Welcome!</Heading>
-          <Text mb={4}>Please sign up below</Text>
           <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
+            <Heading textAlign={"center"} mb={"6"}>
+              Sign Up
+            </Heading>
             <form onSubmit={handleSubmit} noValidate>
               <Field.Root invalid={!!errors.username} required mb={4}>
                 <Field.Label>
@@ -151,10 +154,6 @@ export default function SignupPage() {
                 <PasswordInput value={password} onChange={handlePassword} />
                 <Field.ErrorText>{errors.password}</Field.ErrorText>
                 <PasswordStrengthMeter value={passwordStrength} />
-                <Field.HelperText>
-                  Requires at least one uppercase letter, one lowercase letter, one number and one special character.
-                  Must be at least 8 characters long.
-                </Field.HelperText>
               </Field.Root>
               <Box display="flex" justifyContent="center" mb={4}>
                 {googleSuccess ? (
