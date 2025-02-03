@@ -1,7 +1,7 @@
 "use client";
 import { React, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import EventCard from "../../components/EventCard.jsx";
+import EventCard from "../../components/eventCard.jsx";
 import { Heading, Button, SimpleGrid, Box, Flex, Center, Spinner } from "@chakra-ui/react";
 import Cookies from "js-cookie";
 
