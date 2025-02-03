@@ -9,6 +9,7 @@ export default function Dashboard() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const colorPalette = ["red", "blue", "green", "yellow", "purple", "orange"];
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     const accessToken = localStorage.getItem("accessToken");
@@ -41,44 +42,61 @@ export default function Dashboard() {
   }
   return (
     <Box p={6} maxW="800px" mx="auto">
-      <Card.Root mb={6} p={4} borderRadius="lg" boxShadow="md">
+      <Card.Root mb={6} p={6} borderRadius="xl" boxShadow="lg" bg={"gray.950"}>
         <CardBody>
           <HStack mb={4} gap={3}>
-            <Avatar name={user.username} src="" />
-            <Stack>
+            <Avatar size={"2xl"} name={user.username} src="" colorPalette={"blue"} />
+            <Stack spacing={1} ml={4}>
               <Heading size="lg">Welcome, {user.username}</Heading>
               <Text color="gray.500">{user.email}</Text>
+              <Text color="gray.300" fontSize="sm">
+                Attending {user.events ? user.events.length : 0} events
+              </Text>
             </Stack>
           </HStack>
         </CardBody>
       </Card.Root>
 
-      <Heading size="md" mb={4}>
-        Your Events
-      </Heading>
-      {events.length > 0 ? (
-        events.map((event) => (
-          <Card.Root key={event._id} mb={4} p={4} borderRadius="lg" boxShadow="sm">
-            <CardBody>
-              <Heading size="md" mb={2}>
-                {event.title}
-              </Heading>
-              <Text fontSize="sm" color="gray.500">
-                {event.category}
-              </Text>
-              <Text mt={2}>{event.description}</Text>
-              <Text fontSize="sm" mt={2}>
-                Date: {new Date(event.date).toLocaleDateString()}
-              </Text>
-              <Text fontSize="sm" mt={1}>
-                {event.attendees.length} Attending
-              </Text>
-            </CardBody>
-          </Card.Root>
-        ))
-      ) : (
-        <Text>No events available.</Text>
-      )}
+      <Card.Root p={5} borderRadius="lg" boxShadow="md" bg="gray.950">
+        <CardBody>
+          <Heading size="md" mb={4}>
+            Your Events
+          </Heading>
+          {events.length > 0 ? (
+            events.map((event) => (
+              <Card.Root
+                key={event._id}
+                mb={4}
+                p={4}
+                borderRadius="lg"
+                boxShadow="sm"
+                transition="transform 0.2s ease-in-out"
+                _hover={{ transform: "scale(1.02)", boxShadow: "2xl" }}
+                borderLeft="6px solid #D52929"
+                bg={"gray.900"}
+              >
+                <CardBody>
+                  <Heading size="md" mb={2}>
+                    {event.title}
+                  </Heading>
+                  <Text fontSize="sm" color="gray.500">
+                    {event.category}
+                  </Text>
+                  <Text mt={2}>{event.description}</Text>
+                  <Text fontSize="sm" mt={2}>
+                    Date: {new Date(event.date).toLocaleDateString()}
+                  </Text>
+                  <Text fontSize="sm" mt={1}>
+                    {event.attendees.length} Attending
+                  </Text>
+                </CardBody>
+              </Card.Root>
+            ))
+          ) : (
+            <Text color="gray.500">No events available.</Text>
+          )}
+        </CardBody>
+      </Card.Root>
     </Box>
   );
 }

@@ -101,7 +101,7 @@ export default function LoginPage() {
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
       <Center height={"100vh"} alignItems="flex-start" pt={10}>
         <Stack width={"50%"} align={"center"}>
-          <Image mb={"16"} width={"85%"} src="/schedulo-logo.svg" mt={"8"} />
+          <Image mb={"12"} width={"85%"} src="/schedulo-logo.svg" mt={"8"} />
           {alert.message && (
             <Alert.Root zindex={9999} status={alert.status} top={4}>
               <Alert.Indicator />
@@ -111,7 +111,7 @@ export default function LoginPage() {
               </Alert.Content>
             </Alert.Root>
           )}
-          <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"} mt={"6"}>
+          <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"} mt={"6"} bg={"gray.950"}>
             <Heading textAlign={"center"} mb={"6"}>
               Log In
             </Heading>
@@ -132,21 +132,35 @@ export default function LoginPage() {
                 <PasswordInput value={password} onChange={(event) => setPassword(event.target.value)} />
                 <FieldErrorText>{errors.password}</FieldErrorText>
               </Field.Root>
-              <ButtonGroup mb={4}>
-                <Button loadingText={"Authenticating..."} disabled={accessToken} onClick={() => googleLogin()}>
-                  Authenticate with Google
-                </Button>
-                <Button loading={buttonLoading} loadingText={"Logging in..."} type="submit" disabled={!accessToken}>
-                  Log In
-                </Button>
-              </ButtonGroup>
+              <Center>
+                <ButtonGroup mb={4}>
+                  {accessToken ? (
+                    <Button disabled>✅ Google Authenticated</Button>
+                  ) : (
+                    <Button loadingText={"Authenticating..."} onClick={() => googleLogin()}>
+                      Authenticate with Google
+                    </Button>
+                  )}
 
-              <Text align={"center"}>
-                Don't have an account yet?{" "}
-                <Link colorPalette={"teal"} variant="underline" href="/signup">
-                  Sign up.
-                </Link>
-              </Text>
+                  <Button
+                    loading={buttonLoading}
+                    colorPalette={"red"}
+                    loadingText={"Logging in..."}
+                    type="submit"
+                    disabled={!accessToken}
+                  >
+                    Log In
+                  </Button>
+                </ButtonGroup>
+              </Center>
+              <Center>
+                <Text align={"center"}>
+                  Don't have an account yet?
+                  <Link colorPalette={"red"} variant="underline" href="/signup" ml={1}>
+                    Sign up.
+                  </Link>
+                </Text>
+              </Center>
             </form>
           </Box>
         </Stack>

@@ -8,6 +8,7 @@ import {
   Stack,
   Input,
   Button,
+  ButtonGroup,
   Field,
   FieldRequiredIndicator,
   Center,
@@ -124,7 +125,7 @@ export default function SignupPage() {
               </Alert.Content>
             </Alert.Root>
           )}
-          <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
+          <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"} bg={"gray.950"}>
             <Heading textAlign={"center"} mb={"6"}>
               Sign Up
             </Heading>
@@ -155,26 +156,32 @@ export default function SignupPage() {
                 <Field.ErrorText>{errors.password}</Field.ErrorText>
                 <PasswordStrengthMeter value={passwordStrength} />
               </Field.Root>
-              <Box display="flex" justifyContent="center" mb={4}>
-                {googleSuccess ? (
-                  <Button disabled>✅ Google Authenticated</Button>
-                ) : (
-                  <GoogleLogin
-                    onSuccess={handleGoogleSuccess}
-                    onError={handleGoogleFailure}
-                    render={(renderProps) => <Button onClick={renderProps.onClick}>Continue with Google</Button>}
-                  />
-                )}
-              </Box>
               <Center mb={4}>
-                <Button type="submit" disabled={!googleToken} loading={buttonLoading} loadingText={"Signing up..."}>
-                  Sign Up
-                </Button>
+                <ButtonGroup>
+                  {googleSuccess ? (
+                    <Button disabled>✅ Google Authenticated</Button>
+                  ) : (
+                    <GoogleLogin
+                      onSuccess={handleGoogleSuccess}
+                      onError={handleGoogleFailure}
+                      render={(renderProps) => <Button onClick={renderProps.onClick}>Continue with Google</Button>}
+                    />
+                  )}
+                  <Button
+                    type="submit"
+                    disabled={!googleToken}
+                    loading={buttonLoading}
+                    loadingText={"Signing up..."}
+                    colorPalette={"red"}
+                  >
+                    Sign Up
+                  </Button>
+                </ButtonGroup>
               </Center>
               <Center>
                 <Text align={"center"}>
                   Already have an account?
-                  <Link variant={"underline"} colorPalette={"teal"} href="/login">
+                  <Link variant={"underline"} colorPalette={"red"} href="/login" ml={1}>
                     Login
                   </Link>
                   .

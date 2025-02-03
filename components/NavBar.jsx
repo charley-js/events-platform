@@ -20,13 +20,20 @@ export default function NavBar() {
   if (pathname === "/login" || pathname === "/signup") return null;
 
   return (
-    <Box px={4} py={3} mb={4}>
+    <Box px={4} py={3} mb={14}>
       <Flex justify={"space-between"} align="center" width="100%">
         <Flex justify="flex-start" align="center" flex="1">
           <Image width="500px" src="/schedulo-logo.svg" ml={0} />
         </Flex>
         <Flex gap={10} justify="center" align="center" flex="1">
-          <Link fontSize={"large"} as={NextLink} href="/events" color="white">
+          <Link
+            fontSize={"2xl"}
+            as={NextLink}
+            href="/events"
+            color="white"
+            textDecoration={"underline"}
+            _hover={{ color: "red" }}
+          >
             Events
           </Link>
         </Flex>
@@ -36,7 +43,7 @@ export default function NavBar() {
               <Avatar name={username} />
             </AvatarGroup>
           </Link>
-          <Button onClick={handleClick} variant="outline" color="white">
+          <Button onClick={handleClick} colorPalette={"red"}>
             Log Out
           </Button>
         </Flex>

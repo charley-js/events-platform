@@ -48,7 +48,7 @@ export default function EventsPage() {
   return (
     <div>
       <Flex justify="center" align="center" mb={8}>
-        <Heading size={"2xl"} textAlign={"center"} flex="1">
+        <Heading size={"2xl"} textAlign={"center"} flex="1" ml={28}>
           All Events
         </Heading>
         {isMod && (
@@ -57,7 +57,7 @@ export default function EventsPage() {
           </Button>
         )}
       </Flex>
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4} ml={27}>
         {events.map((event) => (
           <Box key={event._id}>
             <EventCard event={event} isMod={isMod} fetchEvents={fetchEvents} />

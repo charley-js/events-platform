@@ -1,7 +1,8 @@
 import { React, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Alert, Stack, Text, Button, ButtonGroup, Center } from "@chakra-ui/react";
+import { Box, Alert, Stack, Text, Button, ButtonGroup, Center, Flex, Badge } from "@chakra-ui/react";
 import { Tag } from "../components/ui/tag";
+import { FaEdit, FaTrash, FaUsers } from "react-icons/fa";
 
 export default function EventCard({ event, isMod, fetchEvents }) {
   const [attendees, setAttendees] = useState(event.attendees);
@@ -19,6 +20,7 @@ export default function EventCard({ event, isMod, fetchEvents }) {
   }
 
   function handleSignup() {
+    event.stopPropagation();
     setSignupLoading(true);
     if (!userId || !accessToken) {
       setSignupLoading(false);
@@ -87,12 +89,14 @@ export default function EventCard({ event, isMod, fetchEvents }) {
   return (
     <Box
       borderWidth="1px"
-      borderRadius="lg"
+      borderRadius="xl"
       overflow="hidden"
-      boxShadow="md"
-      p={4}
-      maxWidth="350px"
-      margin="auto"
+      boxShadow="lg"
+      p={5}
+      maxWidth="400px"
+      bgGradient="linear(to-r, gray.900, gray.800)"
+      color="white"
+      _hover={{ transform: "scale(1.02)", transition: "0.3s ease-in-out" }}
       cursor="pointer"
       onClick={handleClick}
     >
@@ -106,42 +110,64 @@ export default function EventCard({ event, isMod, fetchEvents }) {
         </Alert.Root>
       )}
       <Stack spacing={4}>
-        <Text fontSize="xl" fontWeight="bold">
-          {event.title}
+        <Flex justify="space-between" align="center">
+          <Text fontSize="xl" fontWeight="bold">
+            {event.title}
+          </Text>
+          <Badge colorScheme="green" fontSize="sm" p={1} borderRadius="lg">
+            <FaUsers /> {event.attendees.length}
+          </Badge>
+        </Flex>
+
+        <Tag size="lg" variant="solid" bg={"white"} width="fit">
+          {event.category}
+        </Tag>
+
+        <Text noOfLines={2} opacity={0.8}>
+          {event.description}
         </Text>
-        <Tag size="sm">{event.category}</Tag>
-        <Text>{event.description}</Text>
-        <Text fontSize="sm" color="gray">
-          {new Date(event.date).toLocaleDateString()}
+
+        <Text fontSize="sm" opacity={0.7}>
+          📅 {new Date(event.date).toLocaleDateString()}
         </Text>
-        <Text>{event.attendees.length} Attending</Text>
-        <Text fontSize="sm" color="gray.400" mb={"4"}>
+
+        <Text fontSize="sm" opacity={0.5}>
           Created on: {new Date(event.created_at).toLocaleDateString()}
         </Text>
+
         <Center>
-          <Button width={"50%"} onClick={handleSignup} loading={signupLoading} loadingText={"Signing up..."}>
-            Sign up
+          <Button
+            width={"30%"}
+            colorPalette="red"
+            onClick={(event) => handleSignup(event)}
+            isLoading={signupLoading}
+            loadingText={"Signing up..."}
+            _hover={{ bg: "pink" }}
+          >
+            Sign Up
           </Button>
         </Center>
 
         {isMod && (
           <Center>
-            <ButtonGroup gap={6}>
+            <ButtonGroup mt={4} gap={1}>
               <Button
-                colorPalette="blue"
+                bg={"none"}
                 onClick={(event) => handleEditEvent(event)}
-                loading={editLoading}
+                isLoading={editLoading}
                 loadingText={"Loading..."}
+                _hover={{ bg: "white" }}
               >
-                Edit
+                <FaEdit color={"blue"} _hover={{ color: "white" }} />
               </Button>
               <Button
-                colorPalette="red"
+                bg={"none"}
                 onClick={(event) => handleDeleteEvent(event)}
-                loading={deleteLoading}
+                _hover={{ bg: "white" }}
+                isLoading={deleteLoading}
                 loadingText={"Deleting..."}
               >
-                Delete
+                <FaTrash color="red" _hover={{ color: "white" }} />
               </Button>
             </ButtonGroup>
           </Center>
