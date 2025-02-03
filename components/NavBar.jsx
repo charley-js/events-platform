@@ -1,19 +1,32 @@
 "use client";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Box, Flex, Link, Text, Button, Image } from "@chakra-ui/react";
 import { Avatar, AvatarGroup } from "../components/ui/avatar";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-
+import Cookies from "js-cookie";
 export default function NavBar() {
   const pathname = usePathname();
   const router = useRouter();
-  const username = localStorage.getItem("username");
+  const [username, setUsername] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const storedUsername = Cookies.get("username");
+        setUsername(storedUsername);
+      } catch (error) {
+        console.error("Error accessing Cookie.", error);
+        setUsername(null);
+      }
+    }
+  }, []);
 
   function handleClick() {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("isMod");
+    Cookies.remove("userId");
+    Cookies.remove("accessToken");
+    Cookies.remove("isMod");
     router.push("/login");
   }
 

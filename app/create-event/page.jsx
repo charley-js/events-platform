@@ -24,7 +24,7 @@ const eventSchema = yup.object({
   category: yup.string().required("Event category is required"),
 });
 
-export default function CreateEventPage() {
+export default function CreateEvent() {
   const [eventTitle, setEventTitle] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [eventCategory, setEventCategory] = useState("");

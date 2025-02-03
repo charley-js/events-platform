@@ -3,6 +3,15 @@ import React from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Provider } from "../components/ui/provider";
 import NavBar from "../components/NavBar";
+import dynamic from "next/dynamic";
+
+// const Dashboard = dynamic(() => import("../app/page"), { ssr: false });
+// const SignupPage = dynamic(() => import("../app/signup/page"), { ssr: false });
+// const LoginPage = dynamic(() => import("../app/login/page"), { ssr: false });
+// const CreateEventPage = dynamic(() => import("../app/create-event/page"), { ssr: false });
+// const EditEventPage = dynamic(() => import("../app/edit-event/[id]/page"), { ssr: false });
+// const EventDetailsPage = dynamic(() => import("../app/events/[id]/page"), { ssr: false });
+// const EventsPage = dynamic(() => import("../app/events/page"), { ssr: false });
 
 export const Metadata = {
   title: "Events Platform",

@@ -3,16 +3,17 @@ import { React, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardBody, Heading, Box, Stack, Text, HStack, Center, Spinner } from "@chakra-ui/react";
 import { Avatar } from "../components/ui/avatar";
+import Cookies from "js-cookie";
 
 export default function Dashboard() {
   const [user, setUser] = useState({});
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const colorPalette = ["red", "blue", "green", "yellow", "purple", "orange"];
+
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    const accessToken = localStorage.getItem("accessToken");
+    const userId = Cookies.get("userId");
+    const accessToken = Cookies.get("accessToken");
     if (!userId || !accessToken) {
       router.push("/login");
       return;

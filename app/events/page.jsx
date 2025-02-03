@@ -3,6 +3,7 @@ import { React, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import EventCard from "../../components/EventCard.jsx";
 import { Heading, Button, SimpleGrid, Box, Flex, Center, Spinner } from "@chakra-ui/react";
+import Cookies from "js-cookie";
 
 export default function EventsPage() {
   const [events, setEvents] = useState([]);
@@ -12,20 +13,22 @@ export default function EventsPage() {
   const router = useRouter();
 
   function fetchEvents() {
-    const userIsMod = localStorage.getItem("isMod");
-    if (userIsMod === "true") {
-      setIsMod(true);
+    if (typeof window !== "undefined") {
+      const userIsMod = Cookies.get("isMod");
+      if (userIsMod === "true") {
+        setIsMod(true);
+      }
+      fetch("/api/events").then((res) => {
+        return res
+          .json()
+          .then((data) => {
+            setEvents(data);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      });
     }
-    fetch("/api/events").then((res) => {
-      return res
-        .json()
-        .then((data) => {
-          setEvents(data);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    });
   }
 
   useEffect(() => {

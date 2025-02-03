@@ -20,6 +20,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { PasswordInput } from "../../components/ui/password-input";
+import Cookies from "js-cookie";
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -72,10 +73,10 @@ export default function LoginPage() {
       })
       .then((data) => {
         if (data.message === "Authentication successful") {
-          localStorage.setItem("userId", data.userId);
-          localStorage.setItem("username", data.username);
-          localStorage.setItem("accessToken", data.accessToken);
-          localStorage.setItem("isMod", data.isMod);
+          Cookies.set("userId", data.userId, { expires: 7 });
+          Cookies.set("username", data.username, { expires: 7 });
+          Cookies.set("accessToken", data.accessToken, { expires: 7 });
+          Cookies.set("isMod", data.isMod, { expires: 7 });
           setAlert({ message: "Logged in succesfully.", status: "success" });
           setTimeout(() => {
             router.push("/");
