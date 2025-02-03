@@ -8,6 +8,8 @@ export default async function handler(req, res) {
   const users = db.collection("users");
   const { username, password, accessToken } = req.body;
 
+  console.log("details in req body at /auth: ", username, password, accessToken);
+
   try {
     if (!username || !password || !accessToken) {
       return res.status(400).json({ message: "Username, password and Google authentication required" });
@@ -29,6 +31,8 @@ export default async function handler(req, res) {
     if (!googleUser || googleUser.id !== user.googleId) {
       return res.status(401).json({ message: "Google authentication failed" });
     }
+
+    console.log("response to send back:", user._id.toString(), user.isMod, accessToken, username);
 
     return res.status(200).json({
       message: "Authentication successful",

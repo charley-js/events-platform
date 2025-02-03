@@ -32,6 +32,7 @@ export default function LoginPage() {
 
   const googleLogin = useGoogleLogin({
     onSuccess: (res) => {
+      console.log("response from googleLogin:", res.access_token);
       setAccessToken(res.access_token);
     },
     onError: (error) => {
@@ -45,6 +46,7 @@ export default function LoginPage() {
     setButtonLoading(true);
     event.preventDefault();
     const details = { username, password, accessToken };
+    console.log("details sent to /auth: ", details);
     setErrors({ username: "", password: "" });
     if (!username) {
       setErrors((prev) => ({
