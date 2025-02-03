@@ -4,7 +4,7 @@ export default [
   {
     _id: new ObjectId("679d1d562f9f097591e2c343"),
     username: "staff",
-    email: "staff@gmail.com",
+    email: "schedulostaff@gmail.com",
     password: "$2b$10$i7QCDAtNgnj277kkZo9/i.4KVuONJs6sCAiOsUtkg2C8RyFyCfKN.",
     events: [],
     googleToken:
