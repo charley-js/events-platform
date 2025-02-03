@@ -7,6 +7,7 @@ export default function EventDetailsPage() {
   const { id } = useParams();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
+  console.log("Id events details page, ", id);
 
   useEffect(() => {
     fetch(`/api/events?_id=${id}`)
@@ -32,6 +33,8 @@ export default function EventDetailsPage() {
     );
   }
 
+  const attendeesCount = event.attendees ? event.attendees.length : 0;
+
   return (
     <Center height="100vh">
       <Box width="60%" p={8} boxShadow="lg" borderRadius="lg">
@@ -41,7 +44,7 @@ export default function EventDetailsPage() {
         </Text>
         <Text fontWeight="bold">Date: {new Date(event.date).toLocaleString()}</Text>
         <Text fontWeight="bold">Category: {event.category}</Text>
-        <Text fontWeight="bold">Attendees: {event.attendees.length}</Text>
+        <Text fontWeight="bold">Attendees: {attendeesCount}</Text>
       </Box>
     </Center>
   );

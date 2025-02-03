@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { Box, Alert, Stack, Text, Button, ButtonGroup, Center, Flex, Badge } from "@chakra-ui/react";
 import { Tag } from "../components/ui/tag";
 import { FaEdit, FaTrash, FaUsers } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 export default function EventCard({ event, isMod, fetchEvents }) {
   const [attendees, setAttendees] = useState(event.attendees);
@@ -10,8 +11,8 @@ export default function EventCard({ event, isMod, fetchEvents }) {
   const [editLoading, setEditLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [alert, setAlert] = useState({ message: "", status: "" });
-  const userId = localStorage.getItem("userId");
-  const accessToken = localStorage.getItem("accessToken");
+  const userId = Cookies.get("userId");
+  const accessToken = Cookies.get("accessToken");
   const eventId = event._id;
   const router = useRouter();
 
@@ -19,7 +20,7 @@ export default function EventCard({ event, isMod, fetchEvents }) {
     router.push(`events/${eventId}`);
   }
 
-  function handleSignup() {
+  function handleSignup(event) {
     event.stopPropagation();
     setSignupLoading(true);
     if (!userId || !accessToken) {
