@@ -86,7 +86,7 @@ export default function EditEventPage() {
         if (data.message === "Event updated successfully") {
           setAlert({ message: "Event updated succesfully.", status: "success" });
           setTimeout(() => {
-            router.push("/events");
+            router.push("/");
           }, 3000);
         } else {
           setAlert({ message: "Failed to update event.", status: "error" });

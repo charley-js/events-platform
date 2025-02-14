@@ -39,7 +39,7 @@ export default function NavBar() {
           <Link
             fontSize={"2xl"}
             as={NextLink}
-            href="/events"
+            href="/"
             color="white"
             textDecoration={"underline"}
             _hover={{ color: "red" }}

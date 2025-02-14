@@ -67,7 +67,7 @@ export default function CreateEvent() {
         if (data.message === "Event created successfully") {
           setAlert({ message: "Event created.", status: "success" });
           setTimeout(() => {
-            router.push("/events");
+            router.push("/");
           }, 3000);
         } else {
           setAlert({ message: "Error creating event.", status: "error" });
