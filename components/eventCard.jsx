@@ -12,7 +12,6 @@ export default function EventCard({ event, isMod, fetchEvents }) {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [alert, setAlert] = useState({ message: "", status: "" });
   const userId = Cookies.get("userId");
-  const accessToken = Cookies.get("accessToken");
   const eventId = event._id;
   const router = useRouter();
 
@@ -23,9 +22,9 @@ export default function EventCard({ event, isMod, fetchEvents }) {
   function handleSignup(event) {
     event.stopPropagation();
     setSignupLoading(true);
-    if (!userId || !accessToken) {
+    if (!userId) {
       setSignupLoading(false);
-      setAlert({ message: "Log in and Google authentication required", status: "error" });
+      setAlert({ message: "Log in required", status: "error" });
       return;
     }
     if (attendees.includes(userId)) {
@@ -37,7 +36,7 @@ export default function EventCard({ event, isMod, fetchEvents }) {
       cache: "no-store",
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, eventId, accessToken }),
+      body: JSON.stringify({ userId, eventId }),
     })
       .then((res) => {
         return res.json();
@@ -136,18 +135,20 @@ export default function EventCard({ event, isMod, fetchEvents }) {
           Created on: {new Date(event.created_at).toLocaleDateString()}
         </Text>
 
-        <Center>
-          <Button
-            width={"30%"}
-            colorPalette="red"
-            onClick={(event) => handleSignup(event)}
-            isLoading={signupLoading}
-            loadingText={"Signing up..."}
-            _hover={{ bg: "pink" }}
-          >
-            Sign Up
-          </Button>
-        </Center>
+        {userId && (
+          <Center>
+            <Button
+              width={"30%"}
+              colorPalette="red"
+              onClick={(event) => handleSignup(event)}
+              isLoading={signupLoading}
+              loadingText={"Signing up..."}
+              _hover={{ bg: "pink" }}
+            >
+              Sign Up
+            </Button>
+          </Center>
+        )}
 
         {isMod && (
           <Center>

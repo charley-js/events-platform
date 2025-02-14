@@ -6,6 +6,7 @@ import { Avatar, AvatarGroup } from "../components/ui/avatar";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+
 export default function NavBar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -13,20 +14,16 @@ export default function NavBar() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      try {
-        const storedUsername = Cookies.get("username");
-        setUsername(storedUsername);
-      } catch (error) {
-        console.error("Error accessing Cookie.", error);
-        setUsername(null);
-      }
+      const storedUsername = Cookies.get("username");
+      setUsername(storedUsername);
     }
   }, []);
 
-  function handleClick() {
+  function handleLogout() {
     Cookies.remove("userId");
     Cookies.remove("accessToken");
     Cookies.remove("isMod");
+    Cookies.remove("username");
     router.push("/login");
   }
 
@@ -50,16 +47,27 @@ export default function NavBar() {
             Events
           </Link>
         </Flex>
-        <Flex justify="flex-end" flex="1" gap={4}>
-          <Link as={NextLink} href="/">
-            <AvatarGroup size="md">
-              <Avatar name={username} />
-            </AvatarGroup>
-          </Link>
-          <Button onClick={handleClick} colorPalette={"red"}>
-            Log Out
-          </Button>
-        </Flex>
+        {username && (
+          <Flex justify="flex-end" flex="1" gap={4}>
+            <Link as={NextLink} href="/dashboard">
+              <AvatarGroup size="md">
+                <Avatar name={username} />
+              </AvatarGroup>
+            </Link>
+            <Button onClick={handleLogout} colorPalette={"red"}>
+              Log Out
+            </Button>
+          </Flex>
+        )}
+        {!username && (
+          <Flex justify="flex-end" flex="1" gap={4}>
+            <Button colorPalette={"red"}>
+              <Link color={"white"} as={NextLink} href="/login">
+                Log In
+              </Link>
+            </Button>
+          </Flex>
+        )}
       </Flex>
     </Box>
   );
