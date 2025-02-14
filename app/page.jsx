@@ -13,8 +13,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const userId = Cookies.get("userId");
-    const accessToken = Cookies.get("accessToken");
-    if (!userId || !accessToken) {
+    if (!userId) {
       router.push("/login");
       return;
     }

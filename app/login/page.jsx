@@ -1,5 +1,4 @@
 "use client";
-import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -24,27 +23,15 @@ import Cookies from "js-cookie";
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [accessToken, setAccessToken] = useState("");
   const [buttonLoading, setButtonLoading] = useState(false);
   const [errors, setErrors] = useState({ username: "", password: "" });
   const [alert, setAlert] = useState({ message: "", status: "" });
   const router = useRouter();
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: (res) => {
-      setAccessToken(res.access_token);
-    },
-    onError: (error) => {
-      console.error("Google login failed:", error);
-      setAlert({ message: "Authentication failed.", status: "error" });
-    },
-    scope: "https://www.googleapis.com/auth/calendar",
-  });
-
   function handleSubmit(event) {
     setButtonLoading(true);
     event.preventDefault();
-    const details = { username, password, accessToken };
+    const details = { username, password };
     setErrors({ username: "", password: "" });
     if (!username) {
       setErrors((prev) => ({
@@ -72,10 +59,9 @@ export default function LoginPage() {
         return res.json();
       })
       .then((data) => {
-        if (data.message === "Authentication successful") {
+        if (data.message === "Login successful") {
           Cookies.set("userId", data.userId, { expires: 7 });
           Cookies.set("username", data.username, { expires: 7 });
-          Cookies.set("accessToken", data.accessToken, { expires: 7 });
           Cookies.set("isMod", data.isMod, { expires: 7 });
           setAlert({ message: "Logged in succesfully.", status: "success" });
           setTimeout(() => {
@@ -99,73 +85,57 @@ export default function LoginPage() {
   }
 
   return (
-    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
-      <Center height={"100vh"} alignItems="flex-start" pt={10}>
-        <Stack width={"50%"} align={"center"}>
-          <Image mb={"12"} width={"85%"} src="/schedulo-logo.svg" mt={"8"} />
-          {alert.message && (
-            <Alert.Root zindex={9999} status={alert.status} top={4}>
-              <Alert.Indicator />
-              <Alert.Content>
-                <Alert.Title>{alert.status === "error" ? "Error!" : "Success!"}</Alert.Title>
-                <Alert.Description>{alert.message}</Alert.Description>
-              </Alert.Content>
-            </Alert.Root>
-          )}
-          <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"} mt={"6"} bg={"gray.950"}>
-            <Heading textAlign={"center"} mb={"6"}>
-              Log In
-            </Heading>
-            <form onSubmit={handleSubmit} noValidate>
-              <Field.Root invalid={!!errors.username} required mb={4}>
-                <Field.Label>
-                  Username:
-                  <FieldRequiredIndicator />
-                </Field.Label>
-                <Input value={username} onChange={(event) => setUsername(event.target.value)} />
-                <FieldErrorText>{errors.username}</FieldErrorText>
-              </Field.Root>
-              <Field.Root invalid={!!errors.password} required mb={4}>
-                <Field.Label>
-                  Enter Password:
-                  <FieldRequiredIndicator />
-                </Field.Label>
-                <PasswordInput value={password} onChange={(event) => setPassword(event.target.value)} />
-                <FieldErrorText>{errors.password}</FieldErrorText>
-              </Field.Root>
-              <Center>
-                <ButtonGroup mb={4}>
-                  {accessToken ? (
-                    <Button disabled>✅ Google Authenticated</Button>
-                  ) : (
-                    <Button loadingText={"Authenticating..."} onClick={() => googleLogin()}>
-                      Authenticate with Google
-                    </Button>
-                  )}
-
-                  <Button
-                    loading={buttonLoading}
-                    colorPalette={"red"}
-                    loadingText={"Logging in..."}
-                    type="submit"
-                    disabled={!accessToken}
-                  >
-                    Log In
-                  </Button>
-                </ButtonGroup>
-              </Center>
-              <Center>
-                <Text align={"center"}>
-                  Don't have an account yet?
-                  <Link colorPalette={"red"} variant="underline" href="/signup" ml={1}>
-                    Sign up.
-                  </Link>
-                </Text>
-              </Center>
-            </form>
-          </Box>
-        </Stack>
-      </Center>
-    </GoogleOAuthProvider>
+    <Center height={"100vh"} alignItems="flex-start" pt={10}>
+      <Stack width={"50%"} align={"center"}>
+        <Image mb={"12"} width={"85%"} src="/schedulo-logo.svg" mt={"8"} />
+        {alert.message && (
+          <Alert.Root zindex={9999} status={alert.status} top={4}>
+            <Alert.Indicator />
+            <Alert.Content>
+              <Alert.Title>{alert.status === "error" ? "Error!" : "Success!"}</Alert.Title>
+              <Alert.Description>{alert.message}</Alert.Description>
+            </Alert.Content>
+          </Alert.Root>
+        )}
+        <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"} mt={"6"} bg={"gray.950"}>
+          <Heading textAlign={"center"} mb={"6"}>
+            Log In
+          </Heading>
+          <form onSubmit={handleSubmit} noValidate>
+            <Field.Root invalid={!!errors.username} required mb={4}>
+              <Field.Label>
+                Username:
+                <FieldRequiredIndicator />
+              </Field.Label>
+              <Input value={username} onChange={(event) => setUsername(event.target.value)} />
+              <FieldErrorText>{errors.username}</FieldErrorText>
+            </Field.Root>
+            <Field.Root invalid={!!errors.password} required mb={4}>
+              <Field.Label>
+                Enter Password:
+                <FieldRequiredIndicator />
+              </Field.Label>
+              <PasswordInput value={password} onChange={(event) => setPassword(event.target.value)} />
+              <FieldErrorText>{errors.password}</FieldErrorText>
+            </Field.Root>
+            <Center>
+              <ButtonGroup mb={4}>
+                <Button loading={buttonLoading} colorPalette={"red"} loadingText={"Logging in..."} type="submit">
+                  Log In
+                </Button>
+              </ButtonGroup>
+            </Center>
+            <Center>
+              <Text align={"center"}>
+                Don't have an account yet?
+                <Link colorPalette={"red"} variant="underline" href="/signup" ml={1}>
+                  Sign up.
+                </Link>
+              </Text>
+            </Center>
+          </form>
+        </Box>
+      </Stack>
+    </Center>
   );
 }
