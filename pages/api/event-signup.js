@@ -50,7 +50,6 @@ async function eventSignup(userId, eventId, accessToken, users, events, res) {
 
     try {
       const tokenInfo = await oauth2Client.getTokenInfo(accessToken);
-      console.log("Google Token Info:", tokenInfo);
     } catch (error) {
       console.error("Invalid Google Token:", error.message);
       return res.status(400).json({ message: "Invalid Google Token" });

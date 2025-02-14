@@ -7,7 +7,6 @@ export default function EventDetailsPage() {
   const { id } = useParams();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log("Id events details page, ", id);
 
   useEffect(() => {
     fetch(`/api/events?_id=${id}`)
