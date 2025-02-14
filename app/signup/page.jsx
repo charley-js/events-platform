@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import * as yup from "yup";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import {
   Heading,
   Text,
@@ -32,7 +31,6 @@ const userSchema = yup.object({
     .matches(/[0-9]/, "Password must contain at least one number")
     .matches(/[@$!%*?&]/, "Password must contain at least one special character")
     .required("Password is required"),
-  googleToken: yup.string().required("Google authentication required"),
 });
 
 export default function SignupPage() {
@@ -40,10 +38,8 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const [googleToken, setGoogleToken] = useState("");
   const [errors, setErrors] = useState({ username: "", email: "", password: "" });
   const [buttonLoading, setButtonLoading] = useState(false);
-  const [googleSuccess, setGoogleSuccess] = useState(false);
   const [alert, setAlert] = useState({ message: "", status: "" });
   const router = useRouter();
 
@@ -52,20 +48,11 @@ export default function SignupPage() {
     const strength = zxcvbn(event.target.value).score;
     setPasswordStrength(strength);
   }
-  function handleGoogleSuccess(res) {
-    setGoogleToken(res.credential);
-    setGoogleSuccess(true);
-  }
-
-  function handleGoogleFailure(error) {
-    console.error(error);
-    setAlert({ message: "Authentication failed.", status: "error" });
-  }
 
   function handleSubmit(event) {
     setButtonLoading(true);
     event.preventDefault();
-    const user = { username, email, password, events: [], googleToken, isMod: false };
+    const user = { username, email, password, events: [], isMod: false };
 
     return userSchema
       .validate(user, { abortEarly: false })
@@ -112,85 +99,68 @@ export default function SignupPage() {
   }
 
   return (
-    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
-      <Center height={"100vh"} alignItems="flex-start">
-        <Stack width={"50%"} align={"center"}>
-          <Image mb={"12"} width={"85%"} src="/schedulo-logo.svg" mt={"8"} />
-          {alert.message && (
-            <Alert.Root zindex={9999} status={alert.status} top={4}>
-              <Alert.Indicator />
-              <Alert.Content>
-                <Alert.Title>{alert.status === "error" ? "Error!" : "Success!"}</Alert.Title>
-                <Alert.Description>{alert.message}</Alert.Description>
-              </Alert.Content>
-            </Alert.Root>
-          )}
-          <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"} bg={"gray.950"}>
-            <Heading textAlign={"center"} mb={"6"}>
-              Sign Up
-            </Heading>
-            <form onSubmit={handleSubmit} noValidate>
-              <Field.Root invalid={!!errors.username} required mb={4}>
-                <Field.Label>
-                  Enter Username:
-                  <FieldRequiredIndicator />
-                </Field.Label>
-                <Input value={username} onChange={(event) => setUsername(event.target.value)} />
-                <Field.ErrorText>{errors.username}</Field.ErrorText>
-              </Field.Root>
-              <Field.Root invalid={!!errors.email} required mb={4}>
-                <Field.Label>
-                  Enter Email:
-                  <FieldRequiredIndicator />
-                </Field.Label>
-                <Input value={email} onChange={(event) => setEmail(event.target.value)} />
-                <Field.ErrorText>{errors.email}</Field.ErrorText>
-                <Field.HelperText>We will never give out your email address.</Field.HelperText>
-              </Field.Root>
-              <Field.Root invalid={!!errors.password} required mb={4}>
-                <Field.Label>
-                  Enter Password:
-                  <FieldRequiredIndicator />
-                </Field.Label>
-                <PasswordInput value={password} onChange={handlePassword} />
-                <Field.ErrorText>{errors.password}</Field.ErrorText>
-                <PasswordStrengthMeter value={passwordStrength} />
-              </Field.Root>
-              <Center mb={4}>
-                <ButtonGroup>
-                  {googleSuccess ? (
-                    <Button disabled>✅ Google Authenticated</Button>
-                  ) : (
-                    <GoogleLogin
-                      onSuccess={handleGoogleSuccess}
-                      onError={handleGoogleFailure}
-                      render={(renderProps) => <Button onClick={renderProps.onClick}>Continue with Google</Button>}
-                    />
-                  )}
-                  <Button
-                    type="submit"
-                    disabled={!googleToken}
-                    loading={buttonLoading}
-                    loadingText={"Signing up..."}
-                    colorPalette={"red"}
-                  >
-                    Sign Up
-                  </Button>
-                </ButtonGroup>
-              </Center>
-              <Center>
-                <Text align={"center"}>
-                  Already have an account?
-                  <Link variant={"underline"} colorPalette={"red"} href="/login" ml={1}>
-                    Login
-                  </Link>
-                  .
-                </Text>
-              </Center>
-            </form>
-          </Box>
-        </Stack>
-      </Center>
-    </GoogleOAuthProvider>
+    <Center height={"100vh"} alignItems="flex-start">
+      <Stack width={"50%"} align={"center"}>
+        <Image mb={"12"} width={"85%"} src="/schedulo-logo.svg" mt={"8"} />
+        {alert.message && (
+          <Alert.Root zindex={9999} status={alert.status} top={4}>
+            <Alert.Indicator />
+            <Alert.Content>
+              <Alert.Title>{alert.status === "error" ? "Error!" : "Success!"}</Alert.Title>
+              <Alert.Description>{alert.message}</Alert.Description>
+            </Alert.Content>
+          </Alert.Root>
+        )}
+        <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"} bg={"gray.950"}>
+          <Heading textAlign={"center"} mb={"6"}>
+            Sign Up
+          </Heading>
+          <form onSubmit={handleSubmit} noValidate>
+            <Field.Root invalid={!!errors.username} required mb={4}>
+              <Field.Label>
+                Enter Username:
+                <FieldRequiredIndicator />
+              </Field.Label>
+              <Input value={username} onChange={(event) => setUsername(event.target.value)} />
+              <Field.ErrorText>{errors.username}</Field.ErrorText>
+            </Field.Root>
+            <Field.Root invalid={!!errors.email} required mb={4}>
+              <Field.Label>
+                Enter Email:
+                <FieldRequiredIndicator />
+              </Field.Label>
+              <Input value={email} onChange={(event) => setEmail(event.target.value)} />
+              <Field.ErrorText>{errors.email}</Field.ErrorText>
+              <Field.HelperText>We will never give out your email address.</Field.HelperText>
+            </Field.Root>
+            <Field.Root invalid={!!errors.password} required mb={4}>
+              <Field.Label>
+                Enter Password:
+                <FieldRequiredIndicator />
+              </Field.Label>
+              <PasswordInput value={password} onChange={handlePassword} />
+              <Field.ErrorText>{errors.password}</Field.ErrorText>
+              <PasswordStrengthMeter value={passwordStrength} />
+            </Field.Root>
+            <Center mb={4}>
+              <ButtonGroup>
+                <Button type="submit" loading={buttonLoading} loadingText={"Signing up..."} colorPalette={"red"}>
+                  Sign Up
+                </Button>
+              </ButtonGroup>
+            </Center>
+            <Center>
+              <Text align={"center"}>
+                Already have an account?
+                <Link variant={"underline"} colorPalette={"red"} href="/login" ml={1}>
+                  Login
+                </Link>
+                .
+              </Text>
+            </Center>
+          </form>
+        </Box>
+      </Stack>
+    </Center>
   );
 }

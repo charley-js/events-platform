@@ -1,13 +1,6 @@
 import { connect } from "../../database/connection";
-import { google } from "googleapis";
 import * as yup from "yup";
 import bcrypt from "bcryptjs";
-
-const oauth2Client = new google.auth.OAuth2(
-  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
-  process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI
-);
 
 const userSchema = yup.object({
   username: yup.string().required("Username is required"),
@@ -20,7 +13,6 @@ const userSchema = yup.object({
     .matches(/[0-9]/, "Password must contain at least one number")
     .matches(/[@$!%*?&]/, "Password must contain at least one special character")
     .required("Password is required"),
-  googleToken: yup.string().required("Google authentication required"),
 });
 
 export default async function handler(req, res) {
@@ -54,13 +46,6 @@ async function signUp(users, body, res) {
       return res.status(400).json({ message: "User already exists" });
     }
     await userSchema.validate(body);
-    const token = await oauth2Client.verifyIdToken({
-      idToken: body.googleToken,
-      audience: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-    });
-    const payload = token.getPayload();
-    body.googleId = payload.sub;
-    body.googleTokens = body.googleToken;
     const hashedPassword = await bcrypt.hash(body.password, 10);
     body.password = hashedPassword;
     const result = await users.insertOne(body);
