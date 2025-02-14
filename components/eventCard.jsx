@@ -4,6 +4,7 @@ import { Box, Alert, Stack, Text, Button, ButtonGroup, Center, Flex, Badge } fro
 import { Tag } from "../components/ui/tag";
 import { FaEdit, FaTrash, FaUsers } from "react-icons/fa";
 import Cookies from "js-cookie";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export default function EventCard({ event, isMod, fetchEvents }) {
   const [attendees, setAttendees] = useState(event.attendees);
@@ -15,12 +16,22 @@ export default function EventCard({ event, isMod, fetchEvents }) {
   const eventId = event._id;
   const router = useRouter();
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: (res) => {
+      handleSignup(res.access_token);
+    },
+    onError: (error) => {
+      console.error("Google login failed:", error);
+      setAlert({ message: "Authentication failed", status: "error" });
+    },
+    scope: "https://www.googleapis.com/auth/calendar",
+  });
+
   function handleClick() {
     router.push(`events/${eventId}`);
   }
 
-  function handleSignup(event) {
-    event.stopPropagation();
+  function handleSignup(accessToken) {
     setSignupLoading(true);
     if (!userId) {
       setSignupLoading(false);
@@ -36,7 +47,7 @@ export default function EventCard({ event, isMod, fetchEvents }) {
       cache: "no-store",
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, eventId }),
+      body: JSON.stringify({ userId, eventId, accessToken }),
     })
       .then((res) => {
         return res.json();
@@ -140,7 +151,10 @@ export default function EventCard({ event, isMod, fetchEvents }) {
             <Button
               width={"30%"}
               colorPalette="red"
-              onClick={(event) => handleSignup(event)}
+              onClick={(event) => {
+                event.stopPropagation();
+                googleLogin();
+              }}
               isLoading={signupLoading}
               loadingText={"Signing up..."}
               _hover={{ bg: "pink" }}
