@@ -20,12 +20,15 @@ import {
 } from "@chakra-ui/react";
 import { PasswordInput } from "../../components/ui/password-input";
 import Cookies from "js-cookie";
+import { useContext } from "react";
+import { SessionContext } from "../../context/SessionContext";
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [buttonLoading, setButtonLoading] = useState(false);
   const [errors, setErrors] = useState({ username: "", password: "" });
   const [alert, setAlert] = useState({ message: "", status: "" });
+  const { login } = useContext(SessionContext);
   const router = useRouter();
 
   function handleSubmit(event) {
@@ -63,6 +66,7 @@ export default function LoginPage() {
           Cookies.set("userId", data.userId, { expires: 7 });
           Cookies.set("username", data.username, { expires: 7 });
           Cookies.set("isMod", data.isMod, { expires: 7 });
+          login(data.username, data.userId, data.isMod);
           setAlert({ message: "Logged in succesfully.", status: "success" });
           setTimeout(() => {
             router.push("/");

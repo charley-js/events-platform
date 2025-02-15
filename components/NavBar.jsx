@@ -6,26 +6,13 @@ import { Avatar, AvatarGroup } from "../components/ui/avatar";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { useContext } from "react";
+import { SessionContext } from "../context/SessionContext";
 
 export default function NavBar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [username, setUsername] = useState(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUsername = Cookies.get("username");
-      setUsername(storedUsername);
-    }
-  }, []);
-
-  function handleLogout() {
-    Cookies.remove("userId");
-    Cookies.remove("accessToken");
-    Cookies.remove("isMod");
-    Cookies.remove("username");
-    router.push("/login");
-  }
+  const { username, logout } = useContext(SessionContext);
 
   if (pathname === "/login" || pathname === "/signup") return null;
 
@@ -54,7 +41,7 @@ export default function NavBar() {
                 <Avatar name={username} />
               </AvatarGroup>
             </Link>
-            <Button onClick={handleLogout} colorPalette={"red"}>
+            <Button onClick={logout} colorPalette={"red"}>
               Log Out
             </Button>
           </Flex>
