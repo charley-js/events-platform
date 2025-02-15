@@ -1,5 +1,6 @@
 "use client";
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useContext } from "react";
+import { SessionContext } from "../context/SessionContext.js";
 import { useRouter } from "next/navigation";
 import EventCard from "../components/eventCard.jsx";
 import { Heading, Button, SimpleGrid, Box, Flex, Center, Spinner } from "@chakra-ui/react";
@@ -7,17 +8,13 @@ import Cookies from "js-cookie";
 
 export default function EventsPage() {
   const [events, setEvents] = useState([]);
-  const [isMod, setIsMod] = useState(false);
+  const { isMod } = useContext(SessionContext);
   const [loading, setLoading] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
   const router = useRouter();
 
   function fetchEvents() {
     if (typeof window !== "undefined") {
-      const userIsMod = Cookies.get("isMod");
-      if (userIsMod === "true") {
-        setIsMod(true);
-      }
       fetch("/api/events").then((res) => {
         return res
           .json()

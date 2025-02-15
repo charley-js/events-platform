@@ -1,4 +1,5 @@
-import { React, useState } from "react";
+import { React, useState, useContext } from "react";
+import { SessionContext } from "../context/SessionContext";
 import { useRouter } from "next/navigation";
 import { Box, Alert, Stack, Text, Button, ButtonGroup, Center, Flex, Badge } from "@chakra-ui/react";
 import { Tag } from "../components/ui/tag";
@@ -12,7 +13,7 @@ export default function EventCard({ event, isMod, fetchEvents }) {
   const [editLoading, setEditLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [alert, setAlert] = useState({ message: "", status: "" });
-  const userId = Cookies.get("userId");
+  const { userId } = useContext(SessionContext);
   const eventId = event._id;
   const router = useRouter();
 
