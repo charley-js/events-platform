@@ -22,6 +22,8 @@ const eventUpdateSchema = yup.object({
   description: yup.string().required("Event description is required"),
   date: yup.string().required("Event date is required"),
   category: yup.string().required("Event category is required"),
+  venue: yup.string().required("Event venue is required"),
+  imageUrl: yup.string(),
 });
 
 export default function EditEventPage() {
@@ -33,10 +35,12 @@ export default function EditEventPage() {
     description: "",
     date: "",
     category: "",
+    venue: "",
+    imageUrl: "",
   });
   const [loading, setLoading] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
-  const [errors, setErrors] = useState({ title: "", description: "", date: "", category: "" });
+  const [errors, setErrors] = useState({ title: "", description: "", date: "", category: "", venue: "", imageUrl: "" });
   const [alert, setAlert] = useState({ message: "", status: "" });
   useEffect(() => {
     fetch(`/api/events?_id=${eventId}`)
@@ -49,6 +53,8 @@ export default function EditEventPage() {
           description: data.description,
           date: data.date,
           category: data.category,
+          venue: data.venue,
+          imageUrl: data.imageUrl,
         });
       })
       .catch((error) => {
@@ -128,8 +134,11 @@ export default function EditEventPage() {
             </Alert.Content>
           </Alert.Root>
         )}
-        <Heading size={"xl"}>Edit Event</Heading>
+
         <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
+          <Heading size={"xl"} textAlign={"center"} mb={6}>
+            Edit Event
+          </Heading>
           <form onSubmit={handleSubmit} noValidate>
             <Field.Root invalid={!!errors.title} mb={4}>
               <Field.Label>Event Title:</Field.Label>
@@ -141,6 +150,15 @@ export default function EditEventPage() {
               <Textarea value={eventInfo.description} onChange={handleChange} name={"description"} />
               <FieldErrorText>{errors.description}</FieldErrorText>
             </Field.Root>
+            <Field.Root mb={4}>
+              <Field.Label>Event Image URL:</Field.Label>
+              <Input value={eventInfo.imageUrl} onChange={handleChange} name={"imageUrl"} />
+            </Field.Root>
+            <Field.Root invalid={!!errors.venue} mb={4}>
+              <Field.Label>Event Venue:</Field.Label>
+              <Input value={eventInfo.venue} onChange={handleChange} name={"venue"} />
+              <FieldErrorText>{errors.venue}</FieldErrorText>
+            </Field.Root>
             <Field.Root invalid={!!errors.date} mb={4}>
               <Field.Label>Event Date:</Field.Label>
               <Input type="datetime-local" value={eventInfo.date} onChange={handleChange} name={"date"} />
@@ -151,9 +169,11 @@ export default function EditEventPage() {
               <Input value={eventInfo.category} onChange={handleChange} name={"category"} />
               <FieldErrorText>{errors.category}</FieldErrorText>
             </Field.Root>
-            <Button loading={buttonLoading} loadingText="Saving..." type={"submit"}>
-              Edit Event
-            </Button>
+            <Center>
+              <Button loading={buttonLoading} loadingText="Saving..." type={"submit"} colorPalette={"red"} mt={4}>
+                Edit Event
+              </Button>
+            </Center>
           </form>
         </Box>
       </Stack>

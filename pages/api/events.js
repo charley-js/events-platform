@@ -16,6 +16,8 @@ const eventUpdateSchema = yup.object({
   description: yup.string().required("Event description is required"),
   date: yup.string().required("Event date is required"),
   category: yup.string().required("Event category is required"),
+  venue: yup.string().required("Event venue is required"),
+  imageUrl: yup.string(),
 });
 
 export default async function handler(req, res) {
