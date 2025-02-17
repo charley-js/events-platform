@@ -28,7 +28,11 @@ const seedUsers = async (db, userData) => {
     await db.createCollection("users");
     console.log("Collection 'users' created.");
     const users = db.collection("users");
-    await users.insertMany(userData);
+    const userDataWithTimeStamp = userData.map((user) => ({
+      ...user,
+      created_at: new Date(),
+    }));
+    await users.insertMany(userDataWithTimeStamp);
     const usersDocs = await users.find().toArray();
     console.log("Contents of the 'users' collection:", usersDocs);
     console.log("'users' data added succesfully.");
@@ -48,7 +52,11 @@ const seedEvents = async (db, eventData) => {
     await db.createCollection("events");
     console.log("Collection 'events' created.");
     const events = db.collection("events");
-    await events.insertMany(eventData);
+    const eventDataWithTimestamp = eventData.map((event) => ({
+      ...event,
+      created_at: new Date(),
+    }));
+    await events.insertMany(eventDataWithTimestamp);
     const eventDocs = await events.find().toArray();
     console.log("Contents of the 'events' collection:", eventDocs);
     console.log("'events' data added succesfully.");
