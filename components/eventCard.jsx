@@ -1,9 +1,9 @@
 import { React, useState, useContext } from "react";
 import { SessionContext } from "../context/SessionContext";
 import { useRouter } from "next/navigation";
-import { Box, Alert, Stack, Text, Button, ButtonGroup, Center, Flex, Badge } from "@chakra-ui/react";
+import { Box, Alert, Stack, Text, Button, ButtonGroup, Center, Flex, Badge, Separator, Image } from "@chakra-ui/react";
 import { Tag } from "../components/ui/tag";
-import { FaEdit, FaTrash, FaUsers } from "react-icons/fa";
+import { FaEdit, FaTrash, FaUsers, FaMapMarkerAlt } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { useGoogleLogin } from "@react-oauth/google";
 
@@ -141,6 +141,10 @@ export default function EventCard({ event, isMod, fetchEvents }) {
           </Alert.Content>
         </Alert.Root>
       )}
+      {event.imageUrl && (
+        <Image src={event.imageUrl} alt={event.title} borderRadius="md" mb={3} maxHeight={100} htmlWidth={"100%"} />
+      )}
+
       <Stack spacing={4}>
         <Flex justify="space-between" align="center">
           <Text fontSize="xl" fontWeight="bold">
@@ -151,17 +155,28 @@ export default function EventCard({ event, isMod, fetchEvents }) {
           </Badge>
         </Flex>
 
-        <Tag size="lg" variant="solid" bg={"white"} width="fit">
+        <Tag size="lg" variant="solid" colorPalette={"red"} width="fit" mb={2}>
           {event.category}
         </Tag>
 
-        <Text noOfLines={2} opacity={0.8}>
+        <Separator borderColor="gray.600" />
+
+        <Text noOfLines={2} opacity={0.8} paddingTop={2} paddingBottom={2}>
           {event.description}
         </Text>
 
-        <Text fontSize="sm" opacity={0.7}>
-          📅 {new Date(event.date).toLocaleDateString()}
-        </Text>
+        <Box background={"gray.800"} padding={3} borderRadius={20}>
+          <Text fontSize="sm" opacity={0.7} paddingTop={2}>
+            📅 {new Date(event.date).toLocaleDateString()}
+          </Text>
+          <Text fontSize="sm" opacity={0.7}>
+            ⏰ {new Date(event.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true })}
+          </Text>
+          <Text fontSize="sm" opacity={0.7}>
+            <FaMapMarkerAlt style={{ display: "inline", marginRight: "5px" }} />
+            {event.venue}
+          </Text>
+        </Box>
 
         <Text fontSize="sm" opacity={0.5}>
           Created on: {new Date(event.created_at).toLocaleDateString()}
@@ -179,6 +194,7 @@ export default function EventCard({ event, isMod, fetchEvents }) {
               loading={signupLoading}
               loadingText={"Loading..."}
               _hover={{ bg: "pink" }}
+              disabled={attendees.includes(userId)}
             >
               Sign Up
             </Button>
