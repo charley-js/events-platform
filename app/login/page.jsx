@@ -70,7 +70,7 @@ export default function LoginPage() {
           setAlert({ message: "Logged in succesfully.", status: "success" });
           setTimeout(() => {
             router.push("/");
-          }, 3000);
+          }, 1500);
         } else if (data.message === "Invalid username or password") {
           setErrors({
             username: "Incorrect username or password",
@@ -82,9 +82,6 @@ export default function LoginPage() {
       })
       .catch((err) => {
         console.error("Error:", err);
-      })
-      .finally(() => {
-        setButtonLoading(false);
       });
   }
 

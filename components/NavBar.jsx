@@ -13,8 +13,23 @@ export default function NavBar() {
   const pathname = usePathname();
   const router = useRouter();
   const { username, logout } = useContext(SessionContext);
+  const [loginButtonLoading, setLoginButtonLoading] = useState(false);
+  const [logoutButtonLoading, setLogoutButtonLoading] = useState(false);
 
   if (pathname === "/login" || pathname === "/signup") return null;
+
+  function handleLogin() {
+    setLoginButtonLoading(true);
+    router.push("/login");
+    setLoginButtonLoading(false);
+  }
+
+  function handleLogout() {
+    setLogoutButtonLoading(true);
+    logout();
+    setLogoutButtonLoading(false);
+    setLoginButtonLoading(false);
+  }
 
   return (
     <Box px={4} py={3} mb={14}>
@@ -41,17 +56,25 @@ export default function NavBar() {
                 <Avatar name={username} />
               </AvatarGroup>
             </Link>
-            <Button onClick={logout} colorPalette={"red"}>
+            <Button
+              loading={logoutButtonLoading}
+              loadingText={"Logging Out..."}
+              onClick={handleLogout}
+              colorPalette={"red"}
+            >
               Log Out
             </Button>
           </Flex>
         )}
         {!username && (
           <Flex justify="flex-end" flex="1" gap={4}>
-            <Button colorPalette={"red"}>
-              <Link color={"white"} as={NextLink} href="/login">
-                Log In
-              </Link>
+            <Button
+              colorPalette={"red"}
+              onClick={handleLogin}
+              loading={loginButtonLoading}
+              loadingText={"Logging In..."}
+            >
+              Log In
             </Button>
           </Flex>
         )}

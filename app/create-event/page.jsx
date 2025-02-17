@@ -68,7 +68,7 @@ export default function CreateEvent() {
           setAlert({ message: "Event created.", status: "success" });
           setTimeout(() => {
             router.push("/");
-          }, 3000);
+          }, 1500);
         } else {
           setAlert({ message: "Error creating event.", status: "error" });
         }
@@ -83,9 +83,6 @@ export default function CreateEvent() {
           });
           setErrors(validationErrors);
         }
-      })
-      .finally(() => {
-        setButtonLoading(false);
       });
   }
 

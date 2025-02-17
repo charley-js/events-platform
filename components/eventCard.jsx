@@ -19,11 +19,16 @@ export default function EventCard({ event, isMod, fetchEvents }) {
 
   const googleLogin = useGoogleLogin({
     onSuccess: (res) => {
+      setSignupLoading(true);
       handleSignup(res.access_token);
     },
     onError: (error) => {
+      setSignupLoading(false);
       console.error("Google login failed:", error);
       setAlert({ message: "Authentication failed", status: "error" });
+      setTimeout(() => {
+        setAlert({ message: "", status: "" });
+      }, 3000);
     },
     scope: "https://www.googleapis.com/auth/calendar",
   });
@@ -33,15 +38,20 @@ export default function EventCard({ event, isMod, fetchEvents }) {
   }
 
   function handleSignup(accessToken) {
-    setSignupLoading(true);
     if (!userId) {
       setSignupLoading(false);
       setAlert({ message: "Log in required", status: "error" });
+      setTimeout(() => {
+        setAlert({ message: "", status: "" });
+      }, 1500);
       return;
     }
     if (attendees.includes(userId)) {
       setSignupLoading(false);
       setAlert({ message: "You are already signed up for this event", status: "error" });
+      setTimeout(() => {
+        setAlert({ message: "", status: "" });
+      }, 1500);
       return;
     }
     fetch(`/api/event-signup`, {
@@ -57,8 +67,14 @@ export default function EventCard({ event, isMod, fetchEvents }) {
         if (data.message === "Event added to Google Calendar") {
           setAttendees([...attendees, userId]);
           setAlert({ message: "Signed up and added to Google Calendar", status: "success" });
+          setTimeout(() => {
+            setAlert({ message: "", status: "" });
+          }, 1500);
         } else {
           setAlert({ message: "Failed to sign up for event", status: "error" });
+          setTimeout(() => {
+            setAlert({ message: "", status: "" });
+          }, 1500);
         }
       })
       .finally(() => {
@@ -85,12 +101,15 @@ export default function EventCard({ event, isMod, fetchEvents }) {
       .then((data) => {
         if (data.message === "Event deleted succesfully") {
           setAlert({ message: "Event deleted", status: "success" });
-          fetchEvents();
           setTimeout(() => {
-            router.replace("/events");
-          }, 3000);
+            setAlert({ message: "", status: "" });
+          }, 1500);
+          fetchEvents();
         } else {
           setAlert({ message: "Failed to delete event", status: "error" });
+          setTimeout(() => {
+            setAlert({ message: "", status: "" });
+          }, 1500);
         }
       })
       .finally(() => {
@@ -150,14 +169,14 @@ export default function EventCard({ event, isMod, fetchEvents }) {
         {userId && (
           <Center>
             <Button
-              width={"30%"}
+              width={"45%"}
               colorPalette="red"
               onClick={(event) => {
                 event.stopPropagation();
                 googleLogin();
               }}
-              isLoading={signupLoading}
-              loadingText={"Signing up..."}
+              loading={signupLoading}
+              loadingText={"Loading..."}
               _hover={{ bg: "pink" }}
             >
               Sign Up
@@ -171,7 +190,7 @@ export default function EventCard({ event, isMod, fetchEvents }) {
               <Button
                 bg={"none"}
                 onClick={(event) => handleEditEvent(event)}
-                isLoading={editLoading}
+                loading={editLoading}
                 loadingText={"Loading..."}
                 _hover={{ bg: "white" }}
               >
@@ -181,7 +200,7 @@ export default function EventCard({ event, isMod, fetchEvents }) {
                 bg={"none"}
                 onClick={(event) => handleDeleteEvent(event)}
                 _hover={{ bg: "white" }}
-                isLoading={deleteLoading}
+                loading={deleteLoading}
                 loadingText={"Deleting..."}
               >
                 <FaTrash color="red" _hover={{ color: "white" }} />
