@@ -8,7 +8,6 @@ export default [
     password: "$2a$10$1jquw4QmrPHjNpi4N.3HwOiudTnGvjKl5JvUcjc99OceDACwFJ0Jy",
     events: [],
     isMod: true,
-    googleId: "116473975012047430919",
   },
   {
     _id: new ObjectId("67a125d6fd2709b4867fb8cb"),
@@ -17,6 +16,5 @@ export default [
     password: "$2a$10$TVrcqrUKxlMZU4tL243EHe51KZ.0jtDEO4T965V.yyo8U05NTeQ3.",
     events: [],
     isMod: false,
-    googleId: "103410096212101455850",
   },
 ];

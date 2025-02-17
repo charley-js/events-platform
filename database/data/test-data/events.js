@@ -9,7 +9,8 @@ export default [
     date: " 2025-02-13 10:00:00",
     category: "Charity",
     attendees: [],
-    created_at: "2025-01-14 21:56:00",
+    venue: "Central Park, New York.",
+    imageUrl: "https://image.newyork.co.uk/wp-content/uploads/2013/02/Central-Park.jpg",
   },
   {
     _id: new ObjectId("60f8c0f8b8a5ca401f2fbb5f"),
@@ -19,7 +20,9 @@ export default [
     date: "2025-06-30 20:00:00",
     category: "Nightlife",
     attendees: [],
-    created_at: "2025-01-14 22:07:00",
+    venue: "Fabric, London",
+    imageUrl:
+      "https://djmag.com/sites/default/files/styles/djm_23_1005x565/public/article/image/SECTION%202a.jpg.webp?itok=Ro0IOQP1",
   },
   {
     _id: new ObjectId("60f8c0f8b8a5ca401f2fbb6d"),
@@ -29,7 +32,9 @@ export default [
     date: "2025-12-01 18:00:00",
     category: "Festivities",
     attendees: [],
-    created_at: "2025-01-15 19:28:00",
+    imageUrl:
+      "https://i2-prod.norfolklive.co.uk/incoming/article7876008.ece/ALTERNATES/s1227b/0_22IB_Kings_Lynn_Christmas_Lights-147.jpg",
+    venue: "City Center, Manchester",
   },
   {
     _id: new ObjectId("60f8c0f8b8a5ca401f2fbb7b"),
@@ -38,7 +43,9 @@ export default [
     date: "2025-05-05 16:00:00",
     category: "Theatre",
     attendees: [],
-    created_at: "2025-01-14 22:07:00",
+    imageUrl:
+      "https://www.mollylimpets.com/images/ww/gallery/Pantomime/cinderella/Cinderella%20by%20Molly%20Limpet_s%201222%20_46.jpg",
+    venue: "Birmingham Hippodrome, Birmingham",
   },
   {
     _id: new ObjectId("67a0f09f3539282d70f8c907"),
@@ -46,8 +53,10 @@ export default [
     description: "The annual firework display on the River Thames, ending the year with a bang!",
     date: "2025-12-31T23:00",
     category: "Festivities",
-    created_at: "2025-01-14 22:07:00",
     attendees: [],
+    venue: "Westminster, London",
+    imageUrl:
+      "https://www.london.gov.uk/sites/default/files/styles/open_graph_image/public/2024-09/NYE2024%2C%20Fireworks%20-2.jpg?h=def1e531&itok=M5yKdpqg",
   },
   {
     _id: new ObjectId("67a0f0e43539282d70f8c908"),
@@ -55,7 +64,9 @@ export default [
     description: "Free entry all day for one day only during the summer holidays!",
     date: "2025-07-13T13:00",
     category: "Activities",
-    created_at: "2025-01-15 19:28:00",
     attendees: [],
+    venue: "The Fitzwilliam Museum, Cambridge.",
+    imageUrl:
+      "https://media.cntraveler.com/photos/5a7b50d069c80815f37e604e/16:9/w_2560,c_limit/British-Museum__2018_00917427_001.jpg",
   },
 ];

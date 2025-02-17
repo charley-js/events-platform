@@ -29,6 +29,7 @@ export default function NavBar() {
     logout();
     setLogoutButtonLoading(false);
     setLoginButtonLoading(false);
+    router.push("/");
   }
 
   return (

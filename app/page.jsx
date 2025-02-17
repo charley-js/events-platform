@@ -48,7 +48,7 @@ export default function EventsPage() {
   return (
     <Container>
       <Flex justify="center" align="center" mb={8}>
-        <Heading size={"2xl"} textAlign={"center"} flex="1" ml={28}>
+        <Heading size={"2xl"} textAlign={"center"} flex="1">
           All Events
         </Heading>
         {isMod && (
