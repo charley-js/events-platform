@@ -3,7 +3,7 @@ import { React, useState, useEffect, useContext } from "react";
 import { SessionContext } from "../context/SessionContext.js";
 import { useRouter } from "next/navigation";
 import EventCard from "../components/eventCard.jsx";
-import { Heading, Button, SimpleGrid, Box, Flex, Center, Spinner } from "@chakra-ui/react";
+import { Heading, Button, SimpleGrid, Box, Flex, Center, Spinner, Container } from "@chakra-ui/react";
 import Cookies from "js-cookie";
 
 export default function EventsPage() {
@@ -46,7 +46,7 @@ export default function EventsPage() {
   }
 
   return (
-    <div>
+    <Container>
       <Flex justify="center" align="center" mb={8}>
         <Heading size={"2xl"} textAlign={"center"} flex="1" ml={28}>
           All Events
@@ -57,13 +57,13 @@ export default function EventsPage() {
           </Button>
         )}
       </Flex>
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4} ml={27}>
+      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={"30px"}>
         {events.map((event) => (
-          <Box key={event._id}>
+          <Box key={event._id} display={"flex"} flexDirection={"column"} h={"100%"} paddingBottom={"5"}>
             <EventCard event={event} isMod={isMod} fetchEvents={fetchEvents} />
           </Box>
         ))}
       </SimpleGrid>
-    </div>
+    </Container>
   );
 }

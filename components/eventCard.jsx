@@ -124,7 +124,8 @@ export default function EventCard({ event, isMod, fetchEvents }) {
       overflow="hidden"
       boxShadow="lg"
       p={5}
-      maxWidth="400px"
+      maxWidth="450px"
+      h="100%"
       bgGradient="linear(to-r, gray.900, gray.800)"
       color="white"
       _hover={{ transform: "scale(1.02)", transition: "0.3s ease-in-out" }}
