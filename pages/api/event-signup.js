@@ -63,6 +63,7 @@ async function eventSignup(userId, eventId, accessToken, users, events, res) {
     const googleEvent = {
       summary: event.title,
       description: event.description,
+      location: event.venue,
       start: { dateTime: new Date(event.date).toISOString(), timeZone: "UTC" },
       end: { dateTime: new Date(event.date).toISOString(), timeZone: "UTC" },
       attendees: [{ email: user.email }],
