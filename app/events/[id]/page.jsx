@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Center, Box, Heading, Text, Spinner, Button } from "@chakra-ui/react";
+import { Center, Box, Heading, Text, Spinner, Image, Separator } from "@chakra-ui/react";
+import { Tag } from "../../../components/ui/tag";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 export default function EventDetailsPage() {
   const { id } = useParams();
@@ -36,14 +38,45 @@ export default function EventDetailsPage() {
 
   return (
     <Center height="100vh">
-      <Box width="60%" p={8} boxShadow="lg" borderRadius="lg">
-        <Heading mb={4}>{event.title}</Heading>
-        <Text fontSize="lg" mb={2}>
+      <Box
+        borderWidth="1px"
+        borderRadius="xl"
+        overflow="hidden"
+        boxShadow="lg"
+        p={5}
+        w="80%"
+        h="100%"
+        bgGradient="linear(to-r, gray.900, gray.800)"
+        color="white"
+      >
+        {event.imageUrl && (
+          <Image src={event.imageUrl} alt={event.title} borderRadius="md" mb={3} maxHeight={300} htmlWidth={"100%"} />
+        )}
+        <Heading fontSize={"3xl"} mb={4}>
+          {event.title}
+        </Heading>
+        <Tag size={"xl"} variant="solid" colorPalette={"red"} width="fit" mb={4}>
+          {event.category}
+        </Tag>
+        <Separator borderColor="gray.600" />
+        <Text fontSize="lg" mt={4} mb={6}>
           {event.description}
         </Text>
-        <Text fontWeight="bold">Date: {new Date(event.date).toLocaleString()}</Text>
-        <Text fontWeight="bold">Category: {event.category}</Text>
-        <Text fontWeight="bold">Attendees: {attendeesCount}</Text>
+        <Box background={"gray.800"} padding={3} borderRadius={20} w={"40%"} mb={4}>
+          <Text fontSize="lg" opacity={0.7} paddingTop={2}>
+            📅 {new Date(event.date).toLocaleDateString()}
+          </Text>
+          <Text fontSize="lg" opacity={0.7}>
+            ⏰ {new Date(event.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true })}
+          </Text>
+          <Text fontSize="lg" opacity={0.7}>
+            <FaMapMarkerAlt style={{ display: "inline", marginRight: "5px" }} />
+            {event.venue}
+          </Text>
+        </Box>
+        <Text opacity={0.5} fontStyle={"italic"}>
+          {event.attendees.length} currently attending.
+        </Text>
       </Box>
     </Center>
   );
