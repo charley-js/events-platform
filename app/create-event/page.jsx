@@ -14,6 +14,7 @@ import {
   Input,
   Textarea,
   FieldErrorText,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import * as yup from "yup";
 
@@ -22,6 +23,8 @@ const eventSchema = yup.object({
   description: yup.string().required("Event description is required"),
   date: yup.string().required("Event date is required"),
   category: yup.string().required("Event category is required"),
+  venue: yup.string().required("Event venue is required"),
+  imageUrl: yup.string(),
 });
 
 export default function CreateEvent() {
@@ -29,12 +32,16 @@ export default function CreateEvent() {
   const [eventDescription, setEventDescription] = useState("");
   const [eventCategory, setEventCategory] = useState("");
   const [eventDate, setEventDate] = useState("");
+  const [eventVenue, setEventVenue] = useState("");
+  const [eventImage, setEventImage] = useState("");
   const [buttonLoading, setButtonLoading] = useState(false);
   const [errors, setErrors] = useState({
     title: "",
     description: "",
     category: "",
     date: "",
+    venue: "",
+    imageUrl: "",
   });
   const [alert, setAlert] = useState({ message: "", status: "" });
   const router = useRouter();
@@ -47,11 +54,13 @@ export default function CreateEvent() {
       description: eventDescription,
       date: eventDate,
       category: eventCategory,
+      venue: eventVenue,
+      imageUrl: eventImage,
     };
     return eventSchema
       .validate(newEvent, { abortEarly: false })
       .then(() => {
-        setErrors({ title: "", description: "", category: "", date: "" });
+        setErrors({ title: "", description: "", category: "", date: "", venue: "", imageUrl: "" });
         return fetch("/api/events", {
           method: "POST",
           headers: {
@@ -71,6 +80,7 @@ export default function CreateEvent() {
           }, 1500);
         } else {
           setAlert({ message: "Error creating event.", status: "error" });
+          setButtonLoading(false);
         }
       })
       .catch((err) => {
@@ -82,6 +92,7 @@ export default function CreateEvent() {
             validationErrors[error.path] = error.message;
           });
           setErrors(validationErrors);
+          setButtonLoading(false);
         }
       });
   }
@@ -98,8 +109,10 @@ export default function CreateEvent() {
             </Alert.Content>
           </Alert.Root>
         )}
-        <Heading size={"xl"}>Create Event</Heading>
         <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
+          <Heading size={"xl"} textAlign={"center"} mb={"6"}>
+            Create Event
+          </Heading>
           <form onSubmit={handleEventCreate} noValidate>
             <Field.Root invalid={!!errors.title} required mb={4}>
               <Field.Label>
@@ -117,6 +130,18 @@ export default function CreateEvent() {
               <Textarea value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} />
               <FieldErrorText>{errors.description}</FieldErrorText>
             </Field.Root>
+            <Field.Root mb={4}>
+              <Field.Label>Event Image URL:</Field.Label>
+              <Input value={eventImage} onChange={(e) => setEventImage(e.target.value)} />
+            </Field.Root>
+            <Field.Root invalid={!!errors.venue} required mb={4}>
+              <Field.Label>
+                Event Venue:
+                <FieldRequiredIndicator />
+              </Field.Label>
+              <Input value={eventVenue} onChange={(e) => setEventVenue(e.target.value)} />
+              <FieldErrorText>{errors.venue}</FieldErrorText>
+            </Field.Root>
             <Field.Root invalid={!!errors.date} required mb={4}>
               <Field.Label>
                 Event Date:
@@ -133,9 +158,11 @@ export default function CreateEvent() {
               <Input value={eventCategory} onChange={(e) => setEventCategory(e.target.value)} />
               <FieldErrorText>{errors.category}</FieldErrorText>
             </Field.Root>
-            <Button loading={buttonLoading} loadingText={"Creating..."} type={"submit"}>
-              Create Event
-            </Button>
+            <Center>
+              <Button loading={buttonLoading} loadingText={"Creating..."} type={"submit"} colorPalette={"red"} mt={4}>
+                Create Event
+              </Button>
+            </Center>
           </form>
         </Box>
       </Stack>

@@ -7,6 +7,8 @@ const eventSchema = yup.object({
   description: yup.string().required("Event description is required"),
   date: yup.string().required("Event date is required"),
   category: yup.string().required("Event category is required"),
+  venue: yup.string().required("Event venue is required"),
+  imageUrl: yup.string(),
 });
 
 const eventUpdateSchema = yup.object({
@@ -96,6 +98,8 @@ async function postEvent(events, body, res) {
         date: body.date,
         category: body.category,
         created: body.created_at,
+        venue: body.venue,
+        imageUrl: body.image,
       },
     });
   } catch (error) {
