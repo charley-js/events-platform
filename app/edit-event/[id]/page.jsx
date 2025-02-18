@@ -123,8 +123,13 @@ export default function EditEventPage() {
   }
 
   return (
-    <Center height={"100vh"}>
-      <Stack width={"50%"} align={"center"}>
+    <Center>
+      <Stack
+        w={{ base: "95%", sm: "85%", md: "75%", lg: "50%", xl: "40%" }}
+        maxWidth="1300px"
+        minWidth="300px"
+        align={"center"}
+      >
         {alert.message && (
           <Alert.Root zindex={9999} status={alert.status} top={4}>
             <Alert.Indicator />
@@ -135,7 +140,7 @@ export default function EditEventPage() {
           </Alert.Root>
         )}
 
-        <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
+        <Box m={6} width={"100%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"}>
           <Heading size={"xl"} textAlign={"center"} mb={6}>
             Edit Event
           </Heading>

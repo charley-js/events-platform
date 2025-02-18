@@ -99,9 +99,14 @@ export default function SignupPage() {
   }
 
   return (
-    <Center height={"100vh"} alignItems="flex-start">
-      <Stack width={"50%"} align={"center"}>
-        <Image mb={"12"} width={"85%"} src="/schedulo-logo.svg" mt={"8"} />
+    <Center alignItems="flex-start">
+      <Stack
+        w={{ base: "95%", sm: "85%", md: "75%", lg: "50%", xl: "30%" }}
+        maxWidth="1300px"
+        minWidth="300px"
+        align={"center"}
+      >
+        <Image mb={"12"} width={"40%"} src="/schedulo-logo.svg" mt={"8"} />
         {alert.message && (
           <Alert.Root zindex={9999} status={alert.status} top={4}>
             <Alert.Indicator />
@@ -111,7 +116,7 @@ export default function SignupPage() {
             </Alert.Content>
           </Alert.Root>
         )}
-        <Box width={"50%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"} bg={"gray.950"}>
+        <Box width={"100%"} p={8} boxShadow="lg" borderRadius="lg" borderColor={"white"} bg={"gray.950"}>
           <Heading textAlign={"center"} mb={"6"}>
             Sign Up
           </Heading>

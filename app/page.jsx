@@ -47,16 +47,16 @@ export default function EventsPage() {
 
   return (
     <Container>
-      <Flex justify="center" align="center" mb={8}>
-        <Heading size={"2xl"} textAlign={"center"} flex="1">
-          All Events
-        </Heading>
+      <Heading size={"2xl"} textAlign={"center"} flex="1" mb={10}>
+        All Events
+      </Heading>
+      <Center>
         {isMod && (
-          <Button loading={buttonLoading} loadingText={"Loading..."} onClick={handleCreateEvent} ml="auto" right={"8"}>
+          <Button loading={buttonLoading} loadingText={"Loading..."} onClick={handleCreateEvent} mb={10}>
             Create Event
           </Button>
         )}
-      </Flex>
+      </Center>
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={"30px"}>
         {events.map((event) => (
           <Box key={event._id} display={"flex"} flexDirection={"column"} h={"100%"} paddingBottom={"5"}>
