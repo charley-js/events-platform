@@ -14,7 +14,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "../components/ui/drawer";
-import { HamburgerIcon } from "@chakra-ui/icons";
+
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
@@ -95,9 +95,7 @@ export default function NavBar() {
         <DrawerRoot open={open} onOpenChange={(e) => setOpen(e.open)}>
           <DrawerBackdrop />
           <DrawerTrigger asChild>
-            <IconButton aria-label="Open menu" display={{ base: "flex", md: "none" }} colorPalette={"red"}>
-              <HamburgerIcon />
-            </IconButton>
+            <IconButton aria-label="Open menu" display={{ base: "flex", md: "none" }} colorPalette={"red"}></IconButton>
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
