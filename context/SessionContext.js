@@ -16,7 +16,6 @@ export function SessionProvider({ children }) {
   }, []);
 
   function login(username, userId, isMod) {
-    console.log(username, userId, isMod);
     Cookies.set("username", username, { expires: 7 });
     setUsername(username);
     Cookies.set("userId", userId, { expires: 7 });
